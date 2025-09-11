@@ -1,0 +1,18 @@
+[
+  {
+    "modid": "${modId}",
+    "name": "${modName}",
+    "description": "MCPatcher for 1.7.10",
+    "version": "${modVersion}",
+    "mcversion": "${minecraftVersion}",
+    "url": "https://github.com/FalsePattern/MCPatcher",
+    "updateUrl": "",
+    "authorList": [
+      "FalsePattern"
+    ],
+    "credits": "",
+    "logoFile": "mcpatcher.png",
+    "screenshots": [],
+    "dependencies": []
+  }
+]

@@ -1,0 +1,7 @@
+config.mcpatcher.general=Options
+config.mcpatcher.general.connectedTextures=Connected Textures
+config.mcpatcher.general.connectedTexturesMixins=Connected Textures Mixins
+config.mcpatcher.general.randomMobs=Random Mobs
+config.mcpatcher.general.randomMobsMixins=Random Mobs Mixins
+config.mcpatcher.general.resourcePackOverlay=Resource Pack Overlay
+config.mcpatcher.general.betterGlass=Better Glass
