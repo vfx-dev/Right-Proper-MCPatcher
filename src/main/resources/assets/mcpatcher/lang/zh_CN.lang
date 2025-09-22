@@ -1,7 +1,7 @@
 config.mcpatcher.general=选项
 config.mcpatcher.general.connectedTextures=连接纹理
-config.mcpatcher.general.connectedTexturesMixins=连接纹理Mixin
+config.mcpatcher.general.connectedTexturesMixins=Connected Textures Mixins
 config.mcpatcher.general.randomMobs=随机生物
-config.mcpatcher.general.randomMobsMixins=随机生物Mixin
+config.mcpatcher.general.randomMobsMixins=Random Mobs Mixins
 config.mcpatcher.general.resourcePackOverlay=资源包叠加层
 config.mcpatcher.general.betterGlass=更好的玻璃
