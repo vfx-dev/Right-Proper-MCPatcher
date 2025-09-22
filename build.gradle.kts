@@ -29,6 +29,26 @@ minecraft_fp {
             repoUrl = "https://mvn.falsepattern.com/releases"
             repoName = "mavenpattern"
         }
+        curseforge {
+            projectId = "1344779"
+            dependencies {
+                required("fplib")
+                optional("swansong")
+                optional("falsetweaks")
+                optional("beddium")
+                optional("rple")
+            }
+        }
+        modrinth {
+            projectId = "kvBHaMRv"
+            dependencies {
+                required("fplib")
+                optional("swansong")
+                optional("falsetweaks")
+                optional("beddium")
+                optional("rple")
+            }
+        }
     }
 }
 
