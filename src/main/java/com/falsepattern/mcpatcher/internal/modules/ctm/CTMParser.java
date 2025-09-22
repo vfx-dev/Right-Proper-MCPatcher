@@ -297,10 +297,10 @@ public final class CTMParser {
                 return Method.Fixed;
             case "horizontal+vertical":
             case "h+v":
-                return Method.VerticalHorizontal;
+                return Method.HorizontalVertical;
             case "vertical+horizontal":
             case "v+h":
-                return Method.HorizontalVertical;
+                return Method.VerticalHorizontal;
             default:
                 LOG.warn("Unknown method: {}", str);
                 return Method.None;
