@@ -5,7 +5,7 @@
     "description": "MCPatcher for 1.7.10",
     "version": "${modVersion}",
     "mcversion": "${minecraftVersion}",
-    "url": "https://github.com/FalsePattern/MCPatcher",
+    "url": "https://github.com/vfx-dev/Right-Proper-MCPatcher",
     "updateUrl": "",
     "authorList": [
       "FalsePattern"
