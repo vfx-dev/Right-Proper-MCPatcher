@@ -1,7 +1,7 @@
 config.mcpatcher.general=选项
 config.mcpatcher.general.connectedTextures=连接纹理
-config.mcpatcher.general.connectedTexturesMixins=基于mixin的连接纹理
+config.mcpatcher.general.connectedTexturesMixins=连接纹理驱动模块
 config.mcpatcher.general.randomMobs=随机实体
-config.mcpatcher.general.randomMobsMixins=基于mixin的随机实体
+config.mcpatcher.general.randomMobsMixins=随机实体驱动模块
 config.mcpatcher.general.resourcePackOverlay=覆盖纹理
 config.mcpatcher.general.betterGlass=玻璃透明渲染优化
