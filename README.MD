@@ -25,7 +25,10 @@ This mod implements several features based on the OptiFineDoc documentation:
 - Connected textures: https://github.com/sp614x/optifine/blob/master/OptiFineDoc/doc/ctm.properties
 - Random mobs: https://github.com/sp614x/optifine/blob/master/OptiFineDoc/doc/random_entities.properties
 
-Note: the `ft_default` entry in the ctm properties shipped in this mods jar is an internal implementation detail. Please ignore it, and do not use it in your resource packs!
+Note: the `ft_default` entry in the ctm properties shipped in this mods jar is an internal implementation detail.
+Please ignore it, and do not use it in your resource packs!
+This is needed because the alternative for having this marker would be an expensive resource pack scan,
+which would significantly slow down resource reloads.
 
 ## Credits
 
