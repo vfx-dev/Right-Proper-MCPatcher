@@ -18,6 +18,15 @@ Planned features:
 - Custom Colors for grass and water based on biomes
 - Custom Skyboxes
 
+## Usage
+
+This mod implements several features based on the OptiFineDoc documentation:
+
+- Connected textures: https://github.com/sp614x/optifine/blob/master/OptiFineDoc/doc/ctm.properties
+- Random mobs: https://github.com/sp614x/optifine/blob/master/OptiFineDoc/doc/random_entities.properties
+
+Note: the `ft_default` entry in the ctm properties shipped in this mods jar is an internal implementation detail. Please ignore it, and do not use it in your resource packs!
+
 ## Credits
 
 Based on MCPatcher and MCPatcher: Forge, developed by `prupe` and `mist475`, respectively.
