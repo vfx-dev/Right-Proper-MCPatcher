@@ -57,10 +57,16 @@ public class MobInfo {
     private final @Nullable IntRange.List heights;
     private final @Nullable ObjectSet<BiomeGenBase> biomes;
 
-    private static int getRandom(int x, int y, int z) {
-        int rand = MCPMath.intHash(x);
-        rand = MCPMath.intHash(rand + z);
-        rand = MCPMath.intHash(rand + y);
+    private static int getRandom(TrackedEntity entity) {
+        if (entity instanceof net.minecraft.entity.Entity) {
+            net.minecraft.entity.Entity mcEntity = (net.minecraft.entity.Entity) entity;
+            int rand = MCPMath.intHash(mcEntity.getEntityId());
+            return rand;
+        }
+
+        int rand = MCPMath.intHash(entity.mcp$initialX());
+        rand = MCPMath.intHash(rand + entity.mcp$initialZ());
+        rand = MCPMath.intHash(rand + entity.mcp$initialY());
         return rand;
     }
 
@@ -158,7 +164,7 @@ public class MobInfo {
     }
 
     public ResourceLocation getTextureFor(TrackedEntity entity) {
-        val rand = getRandom(entity.mcp$initialX(), entity.mcp$initialY(), entity.mcp$initialZ());
+        val rand = getRandom(entity);
         int index;
         if (weights == null) {
             index = rand % textures.length;
