@@ -46,6 +46,8 @@ public class Proxy {
     public static class Client extends Proxy {
         private boolean connectedTextures;
         private boolean randomMobs;
+        // TODO: Should customItemTextures be added here?
+
         @Override
         public void postInit(FMLPostInitializationEvent event) {
             val mc = Minecraft.getMinecraft();

@@ -1,0 +1,110 @@
+/*
+ * Right Proper MCPatcher
+ *
+ * Copyright (C) 2025 FalsePattern
+ * All Rights Reserved
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, only version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package com.falsepattern.mcpatcher.internal.modules.cit;
+
+import lombok.val;
+import org.lwjgl.opengl.GL11;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelBase;
+import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.renderer.entity.RendererLivingEntity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+
+public class CITEngine {
+    /**
+     * Wraps the fetching of an armor texture.
+     *
+     * @param entity    Target entity wearing the armor
+     * @param itemStack Item Stack containing the armor
+     * @param original  Original texture
+     *
+     * @return Either the {@code original} texture or a replacement
+     *
+     * @implNote Called from an unconditional wrap of the forge hook: {@link RenderBiped#getArmorResource}
+     */
+    public static ResourceLocation replaceArmorTexture(EntityLivingBase entity,
+                                                       ItemStack itemStack,
+                                                       ResourceLocation original) {
+        return original;
+    }
+
+    /**
+     * Wraps the rendering of entity armor glint.
+     *
+     * @param entity      Target entity wearing the armor
+     * @param itemStack   Item Stack containing the armor
+     * @param partialTick Partial tick (0-1)
+     * @param renderFn    The wrapped render function
+     *
+     * @return {@code true} if rendering was done, {@code false} if vanilla code should run
+     *
+     * @implNote The {@code renderFn} is captured to the first call to {@link ModelBase#render} in {@link RendererLivingEntity#doRender}
+     */
+    public static boolean renderArmorGlint(EntityLivingBase entity,
+                                           ItemStack itemStack,
+                                           float partialTick,
+                                           Runnable renderFn) {
+
+        // TODO: This is the example vanilla code extracted for convenience
+        val f8 = (float) entity.ticksExisted + partialTick;
+        Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("textures/misc/enchanted_item_glint.png"));
+        GL11.glEnable(GL11.GL_BLEND);
+        val f9 = 0.5F;
+        GL11.glColor4f(f9, f9, f9, 1.0F);
+        GL11.glDepthFunc(GL11.GL_EQUAL);
+        GL11.glDepthMask(false);
+
+        for (int k = 0; k < 2; ++k) {
+            GL11.glDisable(GL11.GL_LIGHTING);
+            val f10 = 0.76F;
+            GL11.glColor4f(0.5F * f10, 0.25F * f10, 0.8F * f10, 1.0F);
+            GL11.glBlendFunc(GL11.GL_SRC_COLOR, GL11.GL_ONE);
+            GL11.glMatrixMode(GL11.GL_TEXTURE);
+            GL11.glLoadIdentity();
+            float f11 = f8 * (0.001F + (float) k * 0.003F) * 20.0F;
+            float f12 = 0.33333334F;
+            GL11.glScalef(f12, f12, f12);
+
+            // Note how 'k' is being used here for the shift
+            GL11.glRotatef(30.0F - (float) k * 60.0F, 0.0F, 0.0F, 1.0F);
+            GL11.glTranslatef(0.0F, f11, 0.0F);
+            GL11.glMatrixMode(GL11.GL_MODELVIEW);
+            renderFn.run();
+        }
+
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glMatrixMode(GL11.GL_TEXTURE);
+        GL11.glDepthMask(true);
+        GL11.glLoadIdentity();
+        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glDepthFunc(GL11.GL_LEQUAL);
+
+        // TODO: In this example, we are always redirecting all render calls
+        return true;
+    }
+}

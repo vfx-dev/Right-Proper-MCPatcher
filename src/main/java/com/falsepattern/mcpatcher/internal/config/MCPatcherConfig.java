@@ -30,6 +30,8 @@ import com.falsepattern.mcpatcher.Tags;
 @Config.LangKey
 @Config(modid = Tags.MOD_ID)
 public class MCPatcherConfig {
+    // TODO: Comments should be in the lang next update for localization!
+
     //@formatter:off
     @Config.Comment({"Runtime toggle for connected textures.",
                      "Requires connectedTexturesMixins enabled."})
@@ -74,6 +76,21 @@ public class MCPatcherConfig {
     @Config.Name("betterGlass")
     @Config.DefaultBoolean(true)
     public static boolean betterGlass;
+
+    @Config.Comment({"Runtime toggle for custom item textures.",
+                     "Requires customItemTexturesMixins enabled."})
+    @Config.LangKey
+    @Config.Name("customItemTextures")
+    @Config.DefaultBoolean(true)
+    public static boolean customItemTextures;
+
+    @Config.Comment({"Disable this if you don't want custom item texture mixins to land.",
+                     "This force-disables customItemTextures."})
+    @Config.LangKey
+    @Config.Name("customItemTexturesMixins")
+    @Config.RequiresMcRestart
+    @Config.DefaultBoolean(true)
+    public static boolean customItemTexturesMixins;
     //@formatter:on
 
     static {

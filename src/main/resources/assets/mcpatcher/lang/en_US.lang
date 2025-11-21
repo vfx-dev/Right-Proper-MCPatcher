@@ -5,3 +5,5 @@ config.mcpatcher.general.randomMobs=Random Mobs
 config.mcpatcher.general.randomMobsMixins=Random Mobs Mixins
 config.mcpatcher.general.resourcePackOverlay=Resource Pack Overlay
 config.mcpatcher.general.betterGlass=Better Glass
+config.mcpatcher.general.customItemTextures=Custom Item Textures
+config.mcpatcher.general.customItemTexturesMixins=Custom Item Textures Mixins
