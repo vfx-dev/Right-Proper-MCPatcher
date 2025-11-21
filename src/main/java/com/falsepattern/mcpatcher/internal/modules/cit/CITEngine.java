@@ -22,7 +22,10 @@
 
 package com.falsepattern.mcpatcher.internal.modules.cit;
 
+import com.falsepattern.mcpatcher.Tags;
 import lombok.val;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
@@ -34,6 +37,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 public class CITEngine {
+    static final Logger LOG = LogManager.getLogger(Tags.MOD_NAME + " CIT");
+
     /**
      * Wraps the fetching of an armor texture.
      *
