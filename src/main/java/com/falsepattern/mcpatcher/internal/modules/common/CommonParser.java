@@ -60,8 +60,24 @@ public class CommonParser {
         }
     }
 
+    public static float parseFloat(@Nullable String str, float defVal) {
+        if (str == null) {
+            return defVal;
+        } else {
+            try {
+                return Float.parseFloat(str);
+            } catch (NumberFormatException ignored) {
+                return defVal;
+            }
+        }
+    }
+
     public static boolean parseBoolean(@Nullable String str) {
-        return str != null && str.equalsIgnoreCase("true");
+        return parseBoolean(str, false);
+    }
+
+    public static boolean parseBoolean(@Nullable String str, boolean def) {
+        return str != null ? str.equalsIgnoreCase("true") : def;
     }
 
     @Contract("!null -> !null; null -> null")
