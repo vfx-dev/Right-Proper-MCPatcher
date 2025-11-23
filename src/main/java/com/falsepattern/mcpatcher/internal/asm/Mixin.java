@@ -79,6 +79,12 @@ public enum Mixin implements IMixins {
                        client("cit.MixinRendererLivingEntity"),
                        client("cit.MixinRenderBiped"),
                        client("cit.MixinRenderPlayer")),
+    CustomItemTextures_NoOverlay(Phase.EARLY,
+                                () -> MCPatcherConfig.customItemTexturesMixins && !MCPatcherConfig.resourcePackOverlay,
+                                client("cit.TextureMapMixin_NoOverlay")),
+    CustomItemTextures_Overlay(Phase.EARLY,
+                              () -> MCPatcherConfig.customItemTexturesMixins && MCPatcherConfig.resourcePackOverlay,
+                              client("cit.TextureMapMixin_Overlay")),
 
     //@formatter:on
 
