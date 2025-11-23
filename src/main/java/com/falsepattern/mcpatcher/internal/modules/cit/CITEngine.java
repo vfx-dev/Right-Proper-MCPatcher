@@ -192,8 +192,19 @@ public final class CITEngine {
 
     }
 
-    public static IIcon replaceIcon(ItemStack itemStack, IIcon original) {
-        val list = itemProperties.get(itemStack.getItem());
+    public static IIcon replaceIcon(@Nullable ItemStack itemStack, @Nullable IIcon original) {
+        if (itemStack == null || original == null) {
+            return original;
+        }
+        val item = itemStack.getItem();
+        if (item == null) {
+            return original;
+        }
+        val list = itemProperties.get(item);
+        if (list == null) {
+            return original;
+        }
+
         for (val info : list) {
             if (info.matches(itemStack)) {
                 return info.getIcon(original);

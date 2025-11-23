@@ -38,11 +38,16 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -96,7 +101,72 @@ public final class CITItemInfo implements Comparable<CITItemInfo> {
 
     // TODO
     public boolean matches(ItemStack itemStack) {
-        return false;
+        if (damage != null) {
+            if (!damage.isInRange(itemStack, damageMask)) {
+                return false;
+            }
+        }
+        if (stackSize != null) {
+            if (!stackSize.isInRange(itemStack.stackSize)) {
+                return false;
+            }
+        }
+
+        if (!nbtRules.isEmpty()) {
+            for (val nbtRule : nbtRules) {
+                if (!nbtRule.match(itemStack.stackTagCompound)) {
+                    return false;
+                }
+            }
+        }
+
+        try {
+            return matchEnchantments(itemStack);
+        } catch (RuntimeException e) {
+            return true;
+        }
+    }
+
+    private boolean matchEnchantments(ItemStack itemStack) {
+        if (enchantmentIDs == null && enchantmentLevels == null) {
+            return true;
+        }
+        val itemNbt = itemStack.stackTagCompound;
+        if (itemNbt == null) {
+            return false;
+        }
+
+        final NBTBase enchantNbt;
+        if (itemStack.getItem() == Items.enchanted_book) {
+            enchantNbt = itemNbt.getTag("StoredEnchantments");
+        } else {
+            enchantNbt = itemNbt.getTag("ench");
+        }
+
+        final List<NBTTagCompound> enchantList;
+        if (enchantNbt instanceof NBTTagList) {
+            //noinspection unchecked
+            enchantList = ((NBTTagList)enchantNbt).tagList;
+        } else {
+            return false;
+        }
+
+        for (val enchant : enchantList) {
+            if (enchantmentIDs != null) {
+                val id = enchant.getShort("id");
+                if (!enchantmentIDs.isInRange(id)) {
+                    return false;
+                }
+            }
+            if (enchantmentLevels != null) {
+                val level = enchant.getShort("lvl");
+                if (!enchantmentLevels.isInRange(level)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     public IIcon getIcon(IIcon original) {
