@@ -227,6 +227,8 @@ public final class CITItemInfo implements Comparable<CITItemInfo> {
                 if (src != null) {
                     val dst = textureMap.registerIcon(dstName);
                     altIcons.put(src, dst);
+                    // Required for double-lookups
+                    altIcons.put(dst, dst);
                 }
             }
 
