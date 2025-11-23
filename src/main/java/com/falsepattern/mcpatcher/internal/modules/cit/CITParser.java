@@ -26,9 +26,12 @@ import com.falsepattern.lib.util.MathUtil;
 import com.falsepattern.mcpatcher.internal.modules.common.CollectionUtil;
 import com.falsepattern.mcpatcher.internal.modules.common.CommonParser;
 import com.falsepattern.mcpatcher.internal.modules.common.IntRange;
+import com.falsepattern.mcpatcher.internal.modules.common.NBTRule;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import lombok.val;
 import lombok.var;
@@ -90,6 +93,21 @@ public final class CITParser {
 
     public static IntRange.@Nullable List parseEnchantmentLevels(Properties props) {
         return CommonParser.parseIntRanges(props.getProperty("enchantmentLevels"));
+    }
+
+    public static ObjectList<NBTRule> parseNbtRules(Properties props) {
+        val list = new ObjectArrayList<NBTRule>();
+
+        //noinspection unchecked
+        val entries = (Set<Map.Entry<String, String>>) (Object) props.entrySet();
+        for (val entry : entries) {
+            val rule = NBTRule.create(entry.getKey(), entry.getValue());
+            if (rule != null) {
+                list.add(rule);
+            }
+        }
+
+        return CollectionUtil.lockList(list);
     }
 
     public static @NotNull ObjectSet<Item> parseItems(Properties props) {

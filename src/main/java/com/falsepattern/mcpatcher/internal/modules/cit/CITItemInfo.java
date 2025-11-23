@@ -23,7 +23,9 @@
 package com.falsepattern.mcpatcher.internal.modules.cit;
 
 import com.falsepattern.mcpatcher.internal.modules.common.IntRange;
+import com.falsepattern.mcpatcher.internal.modules.common.NBTRule;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -53,7 +55,7 @@ public final class CITItemInfo {
     private final IntRange.@Nullable List enchantmentIDs;
     private final IntRange.@Nullable List enchantmentLevels;
 
-    // TODO: nbt
+    private final ObjectList<NBTRule> nbtRules;
 
     public CITItemInfo(String name, Properties props) {
         this.name = name;
@@ -69,6 +71,8 @@ public final class CITItemInfo {
 
         this.enchantmentIDs = CITParser.parseEnchantmentIDs(props);
         this.enchantmentLevels = CITParser.parseEnchantmentLevels(props);
+
+        this.nbtRules = CITParser.parseNbtRules(props);
     }
 
     public boolean validate() {

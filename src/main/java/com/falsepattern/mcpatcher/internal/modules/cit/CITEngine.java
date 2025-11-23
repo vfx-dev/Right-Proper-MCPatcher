@@ -96,8 +96,6 @@ public final class CITEngine {
             }
             updateIcons(textureMap, overlay, pack);
         }
-
-        System.out.println("!");
     }
 
     private static void updateIcons(@NotNull TextureMap textureMap,
