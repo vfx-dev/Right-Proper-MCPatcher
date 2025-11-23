@@ -115,7 +115,7 @@ public class CommonParser {
             long min = (range.start != null) ? parseIntSentinel(range.start) : minBound;
             long max = (range.end != null) ? parseIntSentinel(range.end) : maxBound;
             if (min != PARSE_SENTINEL_VALUE && max != PARSE_SENTINEL_VALUE && min <= max) {
-                for (int n = (int)min; n <= max; n++) {
+                for (int n = (int) min; n <= max; n++) {
                     list.add(n);
                 }
             } else {

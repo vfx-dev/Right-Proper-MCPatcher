@@ -60,13 +60,16 @@ public class Proxy {
             customItemTextures = MCPatcherConfig.isCustomItemTexturesEnabled();
             randomMobs = MCPatcherConfig.isRandomMobsEnabled();
 
-            FMLCommonHandler.instance().bus().register(this);
+            FMLCommonHandler.instance()
+                            .bus()
+                            .register(this);
         }
 
         @SubscribeEvent
         public void onConfigCache(ConfigChangedEvent.PostConfigChangedEvent e) {
-            if (!Tags.MOD_ID.equals(e.modID))
+            if (!Tags.MOD_ID.equals(e.modID)) {
                 return;
+            }
 
             // Refresh resources when:
             // - Connected textures are enabled/disabled
@@ -79,7 +82,8 @@ public class Proxy {
             doResourceRefresh |= randomMobs && !MCPatcherConfig.isRandomMobsEnabled();
 
             if (doResourceRefresh) {
-                Minecraft.getMinecraft().scheduleResourcesRefresh();
+                Minecraft.getMinecraft()
+                         .scheduleResourcesRefresh();
             }
 
             connectedTextures = MCPatcherConfig.isConnectedTexturesEnabled();

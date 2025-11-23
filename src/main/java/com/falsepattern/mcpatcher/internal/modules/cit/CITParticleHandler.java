@@ -43,6 +43,7 @@ public final class CITParticleHandler {
 
     /**
      * @param itemStack {@link ItemStack} to be rendered as a particle
+     *
      * @implSpec Called before any {@link EntityBreakingFX} are rendered.
      */
     public static void set(@NotNull ItemStack itemStack) {
@@ -52,6 +53,7 @@ public final class CITParticleHandler {
 
     /**
      * Resets the tracked {@link Item} and associated {@link IIcon}
+     *
      * @implSpec Called after {@link EntityBreakingFX} are done rendering, and on a resource reload.
      */
     public static void reset() {
@@ -64,6 +66,7 @@ public final class CITParticleHandler {
      * @param original the original icon for the given {@link Item}
      *
      * @return The stored {@link IIcon} if the {@link Item}, otherwise the original {@link IIcon}
+     *
      * @implSpec Called when calling {@link EntityBreakingFX#setParticleIcon}
      */
     public static IIcon get(@NotNull Item item, @NotNull IIcon original) {

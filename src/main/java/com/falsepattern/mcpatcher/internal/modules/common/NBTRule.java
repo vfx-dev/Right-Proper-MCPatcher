@@ -120,7 +120,7 @@ abstract public class NBTRule {
         }
 
         //noinspection unchecked
-        val tags = (List<NBTBase>)nbt.tagList;
+        val tags = (List<NBTBase>) nbt.tagList;
 
         if (tagIndex[index] != null) {
             int tagNum = tagIndex[index];

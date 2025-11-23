@@ -146,7 +146,7 @@ public final class CITItemInfo implements Comparable<CITItemInfo> {
         final List<NBTTagCompound> enchantList;
         if (enchantNbt instanceof NBTTagList) {
             //noinspection unchecked
-            enchantList = ((NBTTagList)enchantNbt).tagList;
+            enchantList = ((NBTTagList) enchantNbt).tagList;
         } else {
             return false;
         }
