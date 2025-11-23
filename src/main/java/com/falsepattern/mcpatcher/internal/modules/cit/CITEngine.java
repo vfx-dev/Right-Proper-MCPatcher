@@ -23,11 +23,17 @@
 package com.falsepattern.mcpatcher.internal.modules.cit;
 
 import com.falsepattern.mcpatcher.Tags;
+import com.falsepattern.mcpatcher.internal.modules.common.Identity2ObjectHashMap;
 import com.falsepattern.mcpatcher.internal.modules.common.ResourceScanner;
 import com.falsepattern.mcpatcher.internal.modules.overlay.ResourceGenerator;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import lombok.val;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.message.FormattedMessage;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
@@ -36,11 +42,15 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -48,6 +58,8 @@ public final class CITEngine {
     static final Logger LOG = LogManager.getLogger(Tags.MOD_NAME + " CIT");
 
     private static CITGlobalProps globalProps = new CITGlobalProps();
+
+    private static final Object2ObjectMap<Item, ObjectList<CITItemInfo>> itemProperties = new Identity2ObjectHashMap<>();
 
     private CITEngine() {
         throw new UnsupportedOperationException();
@@ -71,8 +83,94 @@ public final class CITEngine {
         }
     }
 
-    public static void updateIcons(TextureMap textureMap, @Nullable Map<ResourceLocation, ResourceGenerator> overlay) {
+    public static void updateIcons(@NotNull TextureMap textureMap,
+                                   @Nullable Map<ResourceLocation, ResourceGenerator> overlay) {
         LOG.debug("Updating Icons");
+
+        itemProperties.clear();
+
+        val packs = ResourceScanner.resourcePacks();
+        for (val pack : packs) {
+            if (pack == null) {
+                continue;
+            }
+            updateIcons(textureMap, overlay, pack);
+        }
+    }
+
+    private static void updateIcons(@NotNull TextureMap textureMap,
+                                    @Nullable Map<ResourceLocation, ResourceGenerator> overlay,
+                                    @NotNull IResourcePack pack) {
+        val names = ResourceScanner.collectFiles(pack, "mcpatcher/cit/", ".properties", false);
+        names.sort(Comparator.naturalOrder());
+
+        for (val name : names) {
+            // Skip global properties
+            if (name.endsWith("cit.properties")) {
+                continue;
+            }
+
+            LOG.debug("CustomItemTextures: {}", name);
+            try {
+                val loc = new ResourceLocation(name);
+                val is = pack.getInputStream(loc);
+                if (is == null) {
+                    throw new FileNotFoundException(name);
+                }
+                val props = new Properties();
+                props.load(is);
+                val type = props.getProperty("type");
+                if (type == null) {
+                    LOG.warn("type= not defined for: {}", name);
+                }
+                switch (type) {
+                    case "item":
+                        addItemInfo(textureMap, overlay, name, props);
+                        break;
+                    case "enchantment":
+                        addEnchantmentInfo(textureMap, overlay, name, props);
+                        break;
+                    case "armor":
+                        addArmorInfo(textureMap, overlay, name, props);
+                        break;
+                    default:
+                        LOG.warn("Invalid [type={}] for: {}", type, name);
+                }
+            } catch (FileNotFoundException e) {
+                LOG.warn("ConnectedTextures file not found: {}", name);
+            } catch (IOException | RuntimeException e) {
+                LOG.warn(new FormattedMessage("Error while loading custom item texture: {}", name), e);
+            }
+        }
+    }
+
+    private static void addItemInfo(@NotNull TextureMap textureMap,
+                                    @Nullable Map<ResourceLocation, ResourceGenerator> overlay,
+                                    @NotNull String name,
+                                    @NotNull Properties props) {
+        val itemInfo = new CITItemInfo(name, props);
+        if (!itemInfo.validate()) {
+            return;
+        }
+
+        val items = itemInfo.items();
+        for (val item : items) {
+            itemProperties.computeIfAbsent(item, key -> new ObjectArrayList<>())
+                          .add(itemInfo);
+        }
+    }
+
+    private static void addEnchantmentInfo(@NotNull TextureMap textureMap,
+                                           @Nullable Map<ResourceLocation, ResourceGenerator> overlay,
+                                           @NotNull String name,
+                                           @NotNull Properties props) {
+
+    }
+
+    private static void addArmorInfo(@NotNull TextureMap textureMap,
+                                     @Nullable Map<ResourceLocation, ResourceGenerator> overlay,
+                                     @NotNull String name,
+                                     @NotNull Properties props) {
 
     }
 
