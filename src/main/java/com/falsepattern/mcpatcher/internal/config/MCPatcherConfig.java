@@ -101,4 +101,16 @@ public class MCPatcherConfig {
     public static void init() {
 
     }
+
+    public static boolean isConnectedTexturesEnabled() {
+        return connectedTexturesMixins && connectedTextures;
+    }
+
+    public static boolean isCustomItemTexturesEnabled() {
+        return customItemTexturesMixins && customItemTextures;
+    }
+
+    public static boolean isRandomMobsEnabled() {
+        return randomMobsMixins && randomMobs;
+    }
 }
