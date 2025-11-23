@@ -1,0 +1,62 @@
+/*
+ * Right Proper MCPatcher
+ *
+ * Copyright (C) 2025 FalsePattern
+ * All Rights Reserved
+ *
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, only version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package com.falsepattern.mcpatcher.internal.asm;
+
+import lombok.NoArgsConstructor;
+import org.intellij.lang.annotations.Language;
+
+import net.minecraft.launchwrapper.ITweaker;
+import net.minecraft.launchwrapper.Launch;
+import net.minecraft.launchwrapper.LaunchClassLoader;
+
+import java.io.File;
+import java.util.List;
+
+@NoArgsConstructor
+public final class MixinCompatHackTweaker implements ITweaker {
+    @Language(value = "JAVA",
+              prefix = "import ",
+              suffix = ";")
+    private static final String TRANSFORMER = "com.falsepattern.mcpatcher.internal.asm.CITIconReplacementInjector";
+
+    @Override
+    public String[] getLaunchArguments() {
+        Launch.classLoader.registerTransformer(TRANSFORMER);
+        return new String[0];
+    }
+
+    // region Unused
+    @Override
+    public void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile) {
+    }
+
+    @Override
+    public void injectIntoClassLoader(LaunchClassLoader classLoader) {
+    }
+
+    @Override
+    public String getLaunchTarget() {
+        return null;
+    }
+    // endregion
+}

@@ -25,6 +25,10 @@ package com.falsepattern.mcpatcher.internal.asm;
 import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 import com.gtnewhorizon.gtnhmixins.builders.IMixins;
+import lombok.val;
+import org.intellij.lang.annotations.Language;
+import org.spongepowered.asm.launch.GlobalProperties;
+import org.spongepowered.asm.service.mojang.MixinServiceLaunchWrapper;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
@@ -32,16 +36,36 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class CoreLoadingPlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
+public final class CoreLoadingPlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
+    @Language(value = "JAVA",
+              prefix = "import ",
+              suffix = ";")
+    private static final String TWEAKER = "com.falsepattern.mcpatcher.internal.asm.MixinCompatHackTweaker";
+
     public CoreLoadingPlugin() {
         MCPatcherConfig.init();
     }
 
     @Override
     public String[] getASMTransformerClass() {
+        val mixinTweakClasses = GlobalProperties.<List<String>>get(MixinServiceLaunchWrapper.BLACKBOARD_KEY_TWEAKCLASSES);
+        if (mixinTweakClasses != null) {
+            mixinTweakClasses.add(TWEAKER);
+        }
         return new String[0];
     }
 
+    @Override
+    public String getMixinConfig() {
+        return "mixins.mcpatcher.early.json";
+    }
+
+    @Override
+    public List<String> getMixins(Set<String> loadedCoreMods) {
+        return IMixins.getEarlyMixins(Mixin.class, loadedCoreMods);
+    }
+
+    // region Unused
     @Override
     public String getModContainerClass() {
         return null;
@@ -54,21 +78,11 @@ public class CoreLoadingPlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public void injectData(Map<String, Object> data) {
-
     }
 
     @Override
     public String getAccessTransformerClass() {
         return null;
     }
-
-    @Override
-    public String getMixinConfig() {
-        return "mixins.mcpatcher.early.json";
-    }
-
-    @Override
-    public List<String> getMixins(Set<String> loadedCoreMods) {
-        return IMixins.getEarlyMixins(Mixin.class, loadedCoreMods);
-    }
+    // endregion
 }

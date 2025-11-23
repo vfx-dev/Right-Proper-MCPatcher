@@ -27,6 +27,7 @@ import com.falsepattern.mcpatcher.internal.modules.cit.CITEngine;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -34,7 +35,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 @Mixin(Item.class)
-public abstract class ItemMixin {
+public abstract class ItemMixin_Regular {
     @WrapMethod(method = "getIconIndex(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/util/IIcon;",
                 require = 1)
     private IIcon replaceIcon(ItemStack itemStack, Operation<IIcon> original) {
