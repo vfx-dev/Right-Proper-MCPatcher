@@ -77,10 +77,11 @@ public abstract class RendererLivingEntityMixin implements ICITArmorRenderer {
         }
     }
 
-    @Definition(id = "j",
-                local = @Local(type = int.class,
-                               ordinal = 0))
-    @Expression("(j & 15) == 15")
+//    @Definition(id = "j",
+//                local = @Local(type = int.class,
+//                               ordinal = 0))
+//    @Expression("(j & 15) == 15")
+    @Expression("(? & 15) == 15") // TODO: Doesn't work out of dev if I specify the local, some deobf jank?
     @ModifyExpressionValue(method = "doRender(Lnet/minecraft/entity/EntityLivingBase;DDDFF)V",
                            at = @At("MIXINEXTRAS:EXPRESSION"),
                            require = 1)
