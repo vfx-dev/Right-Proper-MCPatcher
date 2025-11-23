@@ -28,18 +28,47 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import org.spongepowered.asm.mixin.Mixin;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 @Mixin(Item.class)
 public abstract class ItemMixin {
-    @WrapMethod(method = "getIconIndex(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/util/IIcon;")
+    @WrapMethod(method = "getIconIndex(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/util/IIcon;",
+                require = 1)
     private IIcon replaceIcon(ItemStack itemStack, Operation<IIcon> original) {
         if (MCPatcherConfig.isCustomItemTexturesEnabled()) {
             return CITEngine.replaceIcon(itemStack, original.call(itemStack));
         } else {
             return original.call(itemStack);
+        }
+    }
+
+    @WrapMethod(method = "getIcon(Lnet/minecraft/item/ItemStack;ILnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/item/ItemStack;I)Lnet/minecraft/util/IIcon;",
+                remap = false,
+                require = 1)
+    private IIcon replaceIcon(ItemStack stack,
+                              int renderPass,
+                              EntityPlayer player,
+                              ItemStack usingItem,
+                              int useRemaining,
+                              Operation<IIcon> original) {
+        if (MCPatcherConfig.isCustomItemTexturesEnabled()) {
+            return CITEngine.replaceIcon(stack, original.call(stack, renderPass, player, usingItem, useRemaining));
+        } else {
+            return original.call(stack, renderPass, player, usingItem, useRemaining);
+        }
+    }
+
+    @WrapMethod(method = "getIcon(Lnet/minecraft/item/ItemStack;I)Lnet/minecraft/util/IIcon;",
+                remap = false,
+                require = 1)
+    private IIcon replaceIcon(ItemStack stack, int pass, Operation<IIcon> original) {
+        if (MCPatcherConfig.isCustomItemTexturesEnabled()) {
+            return CITEngine.replaceIcon(stack, original.call(stack, pass));
+        } else {
+            return original.call(stack, pass);
         }
     }
 }
