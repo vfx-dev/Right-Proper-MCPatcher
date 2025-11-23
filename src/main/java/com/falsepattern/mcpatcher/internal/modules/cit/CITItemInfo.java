@@ -22,17 +22,28 @@
 
 package com.falsepattern.mcpatcher.internal.modules.cit;
 
+import com.falsepattern.mcpatcher.internal.modules.common.CollectionUtil;
+import com.falsepattern.mcpatcher.internal.modules.common.Identity2ObjectHashMap;
 import com.falsepattern.mcpatcher.internal.modules.common.IntRange;
 import com.falsepattern.mcpatcher.internal.modules.common.NBTRule;
+import com.falsepattern.mcpatcher.internal.modules.overlay.ResourceGenerator;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import lombok.val;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
 
+import java.util.Map;
 import java.util.Properties;
 
 import static com.falsepattern.mcpatcher.internal.modules.cit.CITEngine.LOG;
@@ -40,7 +51,7 @@ import static com.falsepattern.mcpatcher.internal.modules.cit.CITEngine.LOG;
 @Getter
 @Accessors(fluent = true,
            chain = false)
-public final class CITItemInfo {
+public final class CITItemInfo implements Comparable<CITItemInfo> {
     private final String name;
 
     private final @Nullable String texture;
@@ -55,7 +66,12 @@ public final class CITItemInfo {
     private final IntRange.@Nullable List enchantmentIDs;
     private final IntRange.@Nullable List enchantmentLevels;
 
+    @Unmodifiable
     private final ObjectList<NBTRule> nbtRules;
+
+    private @Nullable IIcon icon;
+    @Unmodifiable
+    private @Nullable Object2ObjectMap<IIcon, IIcon> altIcons;
 
     public CITItemInfo(String name, Properties props) {
         this.name = name;
@@ -73,14 +89,86 @@ public final class CITItemInfo {
         this.enchantmentLevels = CITParser.parseEnchantmentLevels(props);
 
         this.nbtRules = CITParser.parseNbtRules(props);
+
+        this.icon = null;
+        this.altIcons = null;
     }
 
-    public boolean validate() {
+    // TODO
+    public boolean matches(ItemStack itemStack) {
+        return false;
+    }
+
+    public IIcon getIcon(IIcon original) {
+        final IIcon replacement;
+        if (altIcons != null) {
+            replacement = altIcons.getOrDefault(original, icon);
+        } else {
+            replacement = icon;
+        }
+
+        if (replacement != null) {
+            return replacement;
+        } else {
+            return original;
+        }
+    }
+
+    @Override
+    public int compareTo(@NotNull CITItemInfo other) {
+        // Highest number first
+        val comp = Integer.compare(other.weight, this.weight);
+        if (comp != 0) {
+            return comp;
+        }
+        // Then natural (A-Z)
+        return this.name.compareTo(other.name);
+    }
+
+    public boolean isValid() {
         if (items.isEmpty()) {
             LOG.warn("No valid items defined for: {}", name);
             return false;
         }
-
+        if (texture == null && altTextures.isEmpty()) {
+            LOG.warn("No valid textures defined for: {}", name);
+            return false;
+        }
         return true;
+    }
+
+    public void updateIcons(TextureMap textureMap, @Nullable Map<ResourceLocation, ResourceGenerator> overlay) {
+        if (texture == null) {
+            icon = null;
+        } else {
+            icon = textureMap.registerIcon(texture);
+        }
+
+        if (altTextures.isEmpty()) {
+            altIcons = null;
+        } else {
+            altIcons = new Identity2ObjectHashMap<>();
+
+            for (val entry : altTextures.entrySet()) {
+                val srcName = entry.getKey();
+                val dstName = entry.getValue();
+
+                val src = textureMap.getTextureExtry(srcName);
+                if (src != null) {
+                    val dst = textureMap.registerIcon(dstName);
+                    altIcons.put(src, dst);
+                }
+            }
+
+            if (altIcons.isEmpty()) {
+                altIcons = null;
+            } else {
+                altIcons = CollectionUtil.lockMap(altIcons);
+            }
+        }
+    }
+
+    public boolean hasIcons() {
+        return icon != null || altIcons != null;
     }
 }

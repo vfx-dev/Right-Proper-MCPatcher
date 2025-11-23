@@ -23,10 +23,12 @@
 package com.falsepattern.mcpatcher.internal.modules.cit;
 
 import com.falsepattern.mcpatcher.Tags;
+import com.falsepattern.mcpatcher.internal.modules.common.CollectionUtil;
 import com.falsepattern.mcpatcher.internal.modules.common.Identity2ObjectHashMap;
 import com.falsepattern.mcpatcher.internal.modules.common.ResourceScanner;
 import com.falsepattern.mcpatcher.internal.modules.overlay.ResourceGenerator;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import lombok.val;
@@ -35,6 +37,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.FormattedMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
@@ -46,6 +49,7 @@ import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.FileNotFoundException;
@@ -59,7 +63,7 @@ public final class CITEngine {
 
     private static CITGlobalProps globalProps = new CITGlobalProps();
 
-    private static final Object2ObjectMap<Item, ObjectList<CITItemInfo>> itemProperties = new Identity2ObjectHashMap<>();
+    private static @Unmodifiable Object2ObjectMap<Item, ObjectList<CITItemInfo>> itemProperties = Object2ObjectMaps.emptyMap();
 
     private CITEngine() {
         throw new UnsupportedOperationException();
@@ -87,7 +91,7 @@ public final class CITEngine {
                                    @Nullable Map<ResourceLocation, ResourceGenerator> overlay) {
         LOG.debug("Updating Icons");
 
-        itemProperties.clear();
+        itemProperties = new Identity2ObjectHashMap<>();
 
         val packs = ResourceScanner.resourcePacks();
         for (val pack : packs) {
@@ -96,6 +100,18 @@ public final class CITEngine {
             }
             updateIcons(textureMap, overlay, pack);
         }
+
+        val temp = new Identity2ObjectHashMap<Item, ObjectList<CITItemInfo>>();
+        for (val entry : itemProperties.entrySet()) {
+            val item = entry.getKey();
+            val infos = entry.getValue();
+            if (infos.isEmpty()) {
+                continue;
+            }
+            infos.sort(CITItemInfo::compareTo);
+            temp.put(item, CollectionUtil.lockList(infos));
+        }
+        itemProperties = CollectionUtil.lockMap(temp);
     }
 
     private static void updateIcons(@NotNull TextureMap textureMap,
@@ -147,7 +163,11 @@ public final class CITEngine {
                                     @NotNull String name,
                                     @NotNull Properties props) {
         val itemInfo = new CITItemInfo(name, props);
-        if (!itemInfo.validate()) {
+        if (!itemInfo.isValid()) {
+            return;
+        }
+        itemInfo.updateIcons(textureMap, overlay);
+        if (!itemInfo.hasIcons()) {
             return;
         }
 
@@ -170,6 +190,16 @@ public final class CITEngine {
                                      @NotNull String name,
                                      @NotNull Properties props) {
 
+    }
+
+    public static IIcon replaceIcon(ItemStack itemStack, IIcon original) {
+        val list = itemProperties.get(itemStack.getItem());
+        for (val info : list) {
+            if (info.matches(itemStack)) {
+                return info.getIcon(original);
+            }
+        }
+        return original;
     }
 
     /**

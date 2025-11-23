@@ -68,12 +68,21 @@ public final class CITParser {
      * @implNote No clamping for ID extender support
      */
     public static @Nullable DamageRangeList parseDamage(Properties props) {
-        val str = props.getProperty("damage");
+        var str = props.getProperty("damage");
+        if (str == null) {
+            return null;
+        }
+
+        val isPercent = StringUtils.contains(str, '%');
+        if (isPercent) {
+            str = StringUtils.remove(str, '%');
+        }
+
         val ranges = CommonParser.parseIntRanges(str);
         if (ranges == null) {
             return null;
         }
-        return new DamageRangeList(ranges, StringUtils.contains(str, '%'));
+        return new DamageRangeList(ranges, isPercent);
     }
 
     /**
@@ -210,9 +219,9 @@ public final class CITParser {
             texture = StringUtils.substringBeforeLast(name, "/") + "/" + str;
         }
         if (texture.endsWith(".png")) {
-            return texture;
+            return texture.substring(0, texture.length() - ".png".length());
         } else {
-            return texture + ".png";
+            return texture;
         }
     }
 }
