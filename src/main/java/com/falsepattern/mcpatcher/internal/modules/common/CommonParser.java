@@ -140,7 +140,7 @@ public class CommonParser {
     public static @Nullable IntRange parseIntRange(@Nullable String str) {
         if (str == null) {
             return null;
-        } else if (str.indexOf(45) >= 0) {
+        } else if (str.indexOf('-') >= 0) {
             String[] parts = StringUtils.split(str, "-");
             if (parts.length != 2) {
                 LOG.warn("Invalid range: {}", str);
