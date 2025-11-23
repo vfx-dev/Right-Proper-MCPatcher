@@ -22,7 +22,10 @@
 
 package com.falsepattern.mcpatcher.internal.modules.cit;
 
+import com.falsepattern.lib.util.MathUtil;
 import com.falsepattern.mcpatcher.internal.modules.common.CollectionUtil;
+import com.falsepattern.mcpatcher.internal.modules.common.CommonParser;
+import com.falsepattern.mcpatcher.internal.modules.common.IntRange;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
@@ -52,6 +55,41 @@ TODO: We're not parsing paths correctly. Unsure what to follow as a "ground trut
 public final class CITParser {
     private CITParser() {
         throw new UnsupportedOperationException();
+    }
+
+    public static int parseWeight(Properties props) {
+        return CommonParser.parseInt(props.getProperty("weight"), 0);
+    }
+
+    /**
+     * @implNote No clamping for ID extender support
+     */
+    public static @Nullable DamageRangeList parseDamage(Properties props) {
+        val str = props.getProperty("damage");
+        val ranges = CommonParser.parseIntRanges(str);
+        if (ranges == null) {
+            return null;
+        }
+        return new DamageRangeList(ranges, StringUtils.contains(str, '%'));
+    }
+
+    /**
+     * @implNote No clamping for ID extender support
+     */
+    public static int parseDamageMask(Properties props) {
+        return CommonParser.parseInt(props.getProperty("damageMask"), 0xFFFFFFFF);
+    }
+
+    public static IntRange.@Nullable List parseStackSize(Properties props) {
+        return CommonParser.parseIntRanges(props.getProperty("stackSize"));
+    }
+
+    public static IntRange.@Nullable List parseEnchantmentIDs(Properties props) {
+        return CommonParser.parseIntRanges(props.getProperty("enchantmentIDs"));
+    }
+
+    public static IntRange.@Nullable List parseEnchantmentLevels(Properties props) {
+        return CommonParser.parseIntRanges(props.getProperty("enchantmentLevels"));
     }
 
     public static @NotNull ObjectSet<Item> parseItems(Properties props) {
@@ -148,7 +186,7 @@ public final class CITParser {
         }
 
         final String texture;
-        if (StringUtils.containsAny(str, '/')) {
+        if (StringUtils.contains(str, '/')) {
             texture = str;
         } else {
             texture = StringUtils.substringBeforeLast(name, "/") + "/" + str;

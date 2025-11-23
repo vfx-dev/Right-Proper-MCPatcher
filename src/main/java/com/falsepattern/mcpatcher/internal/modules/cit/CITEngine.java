@@ -96,6 +96,8 @@ public final class CITEngine {
             }
             updateIcons(textureMap, overlay, pack);
         }
+
+        System.out.println("!");
     }
 
     private static void updateIcons(@NotNull TextureMap textureMap,
@@ -119,15 +121,13 @@ public final class CITEngine {
                 }
                 val props = new Properties();
                 props.load(is);
-                val type = props.getProperty("type");
-                if (type == null) {
-                    LOG.warn("type= not defined for: {}", name);
-                }
+                val type = props.getProperty("type", "item");
                 switch (type) {
                     case "item":
                         addItemInfo(textureMap, overlay, name, props);
                         break;
                     case "enchantment":
+                    case "overlay":
                         addEnchantmentInfo(textureMap, overlay, name, props);
                         break;
                     case "armor":

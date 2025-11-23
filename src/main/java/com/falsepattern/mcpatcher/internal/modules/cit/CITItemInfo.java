@@ -22,10 +22,12 @@
 
 package com.falsepattern.mcpatcher.internal.modules.cit;
 
+import com.falsepattern.mcpatcher.internal.modules.common.IntRange;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.item.Item;
 
@@ -38,23 +40,35 @@ import static com.falsepattern.mcpatcher.internal.modules.cit.CITEngine.LOG;
            chain = false)
 public final class CITItemInfo {
     private final String name;
-    private final ObjectSet<Item> items;
-    private final String texture;
-    private final Object2ObjectMap<String, String> altTextures;
 
-    // TODO: weight
-    // TODO: damage [Ranges]
-    // TODO: damageMask
-    // TODO: enchantments [List Strings]
-    // TODO: enchantmentIDs [List Ints]
-    // TODO: enchantmentLevels [Ranges]
+    private final @Nullable String texture;
+    private final Object2ObjectMap<String, String> altTextures;
+    private final int weight;
+    private final ObjectSet<Item> items;
+
+    private final @Nullable DamageRangeList damage;
+    private final int damageMask;
+    private final IntRange.@Nullable List stackSize;
+
+    private final IntRange.@Nullable List enchantmentIDs;
+    private final IntRange.@Nullable List enchantmentLevels;
+
     // TODO: nbt
 
     public CITItemInfo(String name, Properties props) {
         this.name = name;
-        this.items = CITParser.parseItems(props);
+
         this.texture = CITParser.parseTexture(name, props);
         this.altTextures = CITParser.parseAltTextures(name, props);
+        this.weight = CITParser.parseWeight(props);
+        this.items = CITParser.parseItems(props);
+
+        this.damage = CITParser.parseDamage(props);
+        this.damageMask = CITParser.parseDamageMask(props);
+        this.stackSize = CITParser.parseStackSize(props);
+
+        this.enchantmentIDs = CITParser.parseEnchantmentIDs(props);
+        this.enchantmentLevels = CITParser.parseEnchantmentLevels(props);
     }
 
     public boolean validate() {
