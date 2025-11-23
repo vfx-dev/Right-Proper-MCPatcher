@@ -101,7 +101,7 @@ public class CTMInfo {
         this.tiles = CTMParser.parseTileNames(props.getProperty("tiles"), basePath);
         this.connect = CTMParser.parseConnect(props.getProperty("connect"));
         this.facesMask = CTMParser.parseFacesMask(props.getProperty("faces"));
-        this.metadatas = CommonParser.parseInts(props.getProperty("metadata"));
+        this.metadatas = CommonParser.parseInts(props.getProperty("metadata"), 0, 0xFFFF);
         this.biomes = CommonParser.parseBiomes(props.getProperty("biomes"));
 
         var heights = CommonParser.parseIntRanges(props.getProperty("heights"));
@@ -119,7 +119,7 @@ public class CTMInfo {
         this.innerSeams = CommonParser.parseBoolean(props.getProperty("innerSeams"));
         this.width = CommonParser.parseInt(props.getProperty("width"));
         this.height = CommonParser.parseInt(props.getProperty("height"));
-        val weights = CommonParser.parseInts(props.getProperty("weights"));
+        val weights = CommonParser.parseInts(props.getProperty("weights"), 0, 0xFFFF);
         if (weights != null) {
             this.weights = new WeightedRandom(weights);
         }

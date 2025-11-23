@@ -116,11 +116,11 @@ public class MobInfo {
                                                                         @NotNull String prefix) {
         ObjectList<MobInfo> result = new ObjectArrayList<>();
         for (int i = 1; i < Integer.MAX_VALUE; i++) {
-            val skins = CommonParser.parseInts(props.getProperty("skins." + i));
+            val skins = CommonParser.parseInts(props.getProperty("skins." + i), 0, 0xFFFF);
             if (skins == null) {
                 break;
             }
-            val weightInts = CommonParser.parseInts(props.getProperty("weights." + i));
+            val weightInts = CommonParser.parseInts(props.getProperty("weights." + i), 0, 0xFFFF);
             val biomesList = CommonParser.parseBiomes(props.getProperty("biomes." + i));
             val heights = CommonParser.parseIntRanges(props.getProperty("heights." + i));
             var weights = weightInts == null ? null : new WeightedRandom(weightInts, skins.size() + 1);
