@@ -37,17 +37,29 @@ import static com.falsepattern.mcpatcher.internal.modules.cit.CITEngine.LOG;
 @Getter
 @Accessors(fluent = true,
            chain = false)
-public final class CITGlobalProperties {
+public final class CITGlobalProps {
+    private static final Method DEFAULT_METHOD = Method.AVERAGE;
+    private static final int DEFAULT_CAP = 99;
+    private static final float DEFAULT_FADE = 0.5F;
+    private static final boolean DEFAULT_USE_GLINT = true;
+
     private final Method method;
     private final int cap;
     private final float fade;
     private final boolean useGlint;
 
-    public CITGlobalProperties(Properties props) {
-        this.method = Method.parse(props.getProperty("method"));
-        this.cap = Math.max(CommonParser.parseInt(props.getProperty("cap"), 99), 0);
-        this.fade = Math.max(CommonParser.parseFloat(props.getProperty("fade"), 0.5F), 0F);
-        this.useGlint = CommonParser.parseBoolean("glint", true);
+    public CITGlobalProps() {
+        this.method = DEFAULT_METHOD;
+        this.cap = DEFAULT_CAP;
+        this.fade = DEFAULT_FADE;
+        this.useGlint = DEFAULT_USE_GLINT;
+    }
+
+    public CITGlobalProps(Properties props) {
+        this.method = Method.parse(props.getProperty("method"), DEFAULT_METHOD);
+        this.cap = Math.max(CommonParser.parseInt(props.getProperty("cap"), DEFAULT_CAP), 0);
+        this.fade = Math.max(CommonParser.parseFloat(props.getProperty("fade"), DEFAULT_FADE), 0F);
+        this.useGlint = CommonParser.parseBoolean("glint", DEFAULT_USE_GLINT);
     }
 
     public enum Method {
@@ -56,9 +68,9 @@ public final class CITGlobalProperties {
         CYCLE,
         ;
 
-        public static Method parse(@Nullable String value) {
+        public static Method parse(@Nullable String value, Method def) {
             if (value == null) {
-                return AVERAGE;
+                return def;
             }
             switch (value) {
                 case "average":
@@ -69,7 +81,7 @@ public final class CITGlobalProperties {
                     return CYCLE;
                 default: {
                     LOG.warn("Unknown method in cit.properties: [method={}]", value);
-                    return AVERAGE;
+                    return def;
                 }
             }
         }

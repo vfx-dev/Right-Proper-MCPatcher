@@ -24,6 +24,7 @@ package com.falsepattern.mcpatcher.internal;
 
 import com.falsepattern.mcpatcher.Tags;
 import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.modules.cit.CITEngine;
 import com.falsepattern.mcpatcher.internal.modules.mob.MobEngine;
 import lombok.val;
 import lombok.var;
@@ -88,6 +89,10 @@ public class Proxy {
 
         private void reloadResources(IResourceManager resourceManager) {
             Share.log.debug("Reloading Resources");
+
+            if (MCPatcherConfig.isCustomItemTexturesEnabled()) {
+                CITEngine.reloadResources();
+            }
 
             if (MCPatcherConfig.isRandomMobsEnabled()) {
                 MobEngine.reloadResources();

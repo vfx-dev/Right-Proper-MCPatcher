@@ -23,6 +23,7 @@
 package com.falsepattern.mcpatcher.internal.modules.cit;
 
 import com.falsepattern.mcpatcher.Tags;
+import com.falsepattern.mcpatcher.internal.modules.common.ResourceScanner;
 import com.falsepattern.mcpatcher.internal.modules.overlay.ResourceGenerator;
 import lombok.val;
 import org.apache.logging.log4j.LogManager;
@@ -39,12 +40,39 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import java.io.IOException;
 import java.util.Map;
+import java.util.Properties;
 
-public class CITEngine {
+public final class CITEngine {
     static final Logger LOG = LogManager.getLogger(Tags.MOD_NAME + " CIT");
 
+    private static CITGlobalProps globalProps = new CITGlobalProps();
+
+    private CITEngine() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @implNote Called after resources have been reloaded.
+     */
+    public static void reloadResources() {
+        LOG.debug("Reloading Resources");
+
+        try {
+            val res = ResourceScanner.getResource(new ResourceLocation("minecraft:mcpatcher/cit/cit.properties"));
+            val props = new Properties();
+            props.load(res.getInputStream());
+            globalProps = new CITGlobalProps(props);
+            LOG.debug("Loaded custom cit.properties");
+        } catch (IOException e) {
+            globalProps = new CITGlobalProps();
+            LOG.debug("Loaded default cit.properties");
+        }
+    }
+
     public static void updateIcons(TextureMap textureMap, @Nullable Map<ResourceLocation, ResourceGenerator> overlay) {
+        LOG.debug("Updating Icons");
 
     }
 
