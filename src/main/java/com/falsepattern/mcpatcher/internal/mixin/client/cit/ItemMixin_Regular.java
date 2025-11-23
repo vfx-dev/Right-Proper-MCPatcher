@@ -27,7 +27,6 @@ import com.falsepattern.mcpatcher.internal.modules.cit.CITEngine;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;

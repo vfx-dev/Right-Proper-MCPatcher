@@ -22,7 +22,6 @@
 
 package com.falsepattern.mcpatcher.internal.modules.cit;
 
-import com.falsepattern.lib.util.MathUtil;
 import com.falsepattern.mcpatcher.internal.modules.common.CollectionUtil;
 import com.falsepattern.mcpatcher.internal.modules.common.CommonParser;
 import com.falsepattern.mcpatcher.internal.modules.common.IntRange;
