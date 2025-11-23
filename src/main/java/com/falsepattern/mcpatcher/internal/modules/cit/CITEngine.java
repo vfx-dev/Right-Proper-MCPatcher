@@ -75,6 +75,8 @@ public final class CITEngine {
     public static void reloadResources() {
         LOG.debug("Reloading Resources");
 
+        CITParticleHandler.reset();
+
         try {
             val res = ResourceScanner.getResource(new ResourceLocation("minecraft:mcpatcher/cit/cit.properties"));
             val props = new Properties();

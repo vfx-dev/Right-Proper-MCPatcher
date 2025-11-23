@@ -76,7 +76,9 @@ public enum Mixin implements IMixins {
 
     CustomItemTextures(Phase.EARLY,
                        () -> MCPatcherConfig.customItemTexturesMixins,
+                       common("cit.EntityLivingBaseMixin"),
                        client("cit.ItemMixin"),
+                       client("cit.EntityBreakingFXMixin"),
                        client("cit.RendererLivingEntityMixin"),
                        client("cit.RenderBipedMixin"),
                        client("cit.RenderPlayerMixin")),
