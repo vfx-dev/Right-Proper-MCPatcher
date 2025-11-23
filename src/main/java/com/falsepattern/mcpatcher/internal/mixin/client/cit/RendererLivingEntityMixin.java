@@ -44,7 +44,7 @@ import net.minecraft.entity.EntityLivingBase;
 
 @Mixin(value = RendererLivingEntity.class,
        priority = 800) // Early for SwanSong compat, let it wrap our methods
-public abstract class MixinRendererLivingEntity implements ICITArmorRenderer {
+public abstract class RendererLivingEntityMixin implements ICITArmorRenderer {
     // TODO: This will require mod compat for ModernWarfare and CustomPlayerModels, see SwanSong hooks
     @WrapOperation(method = "doRender(Lnet/minecraft/entity/EntityLivingBase;DDDFF)V",
                    at = @At(value = "INVOKE",

@@ -38,7 +38,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 @Mixin(RenderBiped.class)
-public abstract class MixinRenderBiped implements ICITArmorRenderer {
+public abstract class RenderBipedMixin implements ICITArmorRenderer {
     @WrapMethod(method = "getArmorResource",
                 remap = false,
                 require = 1)

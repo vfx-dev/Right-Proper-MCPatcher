@@ -32,7 +32,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 
 @Mixin(RenderPlayer.class)
-public abstract class MixinRenderPlayer implements ICITArmorRenderer {
+public abstract class RenderPlayerMixin implements ICITArmorRenderer {
     @Override
     public boolean mcp$isCustomArmorTextureSupported() {
         return true;

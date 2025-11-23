@@ -22,7 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.modules.cit;
 
-import com.falsepattern.mcpatcher.internal.mixin.client.cit.MixinRendererLivingEntity;
+import com.falsepattern.mcpatcher.internal.mixin.client.cit.RendererLivingEntityMixin;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.renderer.entity.RenderBiped;
@@ -40,7 +40,7 @@ public interface ICITArmorRenderer {
     /**
      * @return {@code true} if this renderer supports CIT, otherwise {@code false}
      *
-     * @apiNote Make this return {@code true} to activate the logic provided by {@link MixinRendererLivingEntity}
+     * @apiNote Make this return {@code true} to activate the logic provided by {@link RendererLivingEntityMixin}
      */
     default boolean mcp$isCustomArmorTextureSupported() {
         return false;
