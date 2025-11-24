@@ -22,12 +22,15 @@
 
 package com.falsepattern.mcpatcher.internal.modules.mob;
 
+import com.falsepattern.mcpatcher.Tags;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import lombok.val;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.entity.Entity;
@@ -37,6 +40,8 @@ import net.minecraft.util.ResourceLocation;
  * @see <a href="https://bitbucket.org/prupe/mcpatcher/src/master/doc/mob.properties">MCPatcher mob.properties</a>
  */
 public class MobEngine {
+    static final Logger LOG = LogManager.getLogger(Tags.MOD_NAME + " Mob");
+
     private static final Object2ObjectMap<ResourceLocation, ObjectList<MobInfo>> cache = new Object2ObjectOpenHashMap<>();
     private static final ObjectSet<ResourceLocation> negativeCache = new ObjectOpenHashSet<>();
     private static boolean isActive = false;
@@ -46,6 +51,8 @@ public class MobEngine {
      * @implNote Called after resources have been reloaded.
      */
     public static void reloadResources() {
+        LOG.debug("Reloading Resources");
+
         isActive = false;
         currentEntity = null;
 
