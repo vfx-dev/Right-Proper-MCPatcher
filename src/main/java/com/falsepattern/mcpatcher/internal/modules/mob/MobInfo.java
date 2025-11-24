@@ -36,6 +36,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import lombok.var;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,6 +52,19 @@ import java.util.Properties;
 public class MobInfo {
     private static final String ENTITY_PATH_PREFIX = "textures/entity/";
     private static final String MCPATCHER_MOB_PATH_PREFIX = "mcpatcher/mob/";
+
+    /**
+     * Aliases for properties so people can use just one
+     */
+    private static final String[] PROP_ALIASES = {"",
+                                                  "_eyes",
+                                                  "_overlay",
+                                                  "_tame",
+                                                  "_angry",
+                                                  "_collar",
+                                                  "_fur",
+                                                  "_invulnerable",
+                                                  "_shooting"};
 
     private final @NotNull String name;
     private final @NotNull ResourceLocation @NotNull [] textures;
@@ -88,8 +102,13 @@ public class MobInfo {
             }
             val hasBaseTexture = pack.resourceExists(resource);
             ObjectList<MobInfo> result = null;
-            val propFile = new ResourceLocation(prefix + ".properties");
-            if (pack.resourceExists(propFile)) {
+            for (val alias : PROP_ALIASES) {
+                val aliasedPrefix = prefix.substring(0, prefix.length() - alias.length());
+                val propFile = new ResourceLocation(aliasedPrefix + ".properties");
+                if (!pack.resourceExists(propFile)) {
+                    continue;
+                }
+
                 val properties = new Properties();
                 try {
                     MobEngine.LOG.debug("From prop file: {}", propFile);
@@ -98,8 +117,9 @@ public class MobInfo {
                     CommonParser.LOG.warn("Failed to parse {}", propFile.toString());
                     CommonParser.LOG.warn("Stacktrace:", e);
                 }
-                result = fromProperties(properties, resource, prefix);
-            } else {
+                result = fromProperties(properties, resource, aliasedPrefix);
+            }
+            if (result == null) {
                 val info = fromTextures(resource, pack, prefix);
                 if (info != null) {
                     result = ObjectLists.singleton(info);
