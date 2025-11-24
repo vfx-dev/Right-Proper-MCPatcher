@@ -69,6 +69,8 @@ public class MobInfo {
         if (!"minecraft".equals(domain)) {
             return null;
         }
+        MobEngine.LOG.debug("Loading resources for: {}", resource);
+
         val path = resource.getResourcePath();
         if (path == null || !path.startsWith(ENTITY_PATH_PREFIX)) {
             return null;
@@ -89,6 +91,7 @@ public class MobInfo {
             if (pack.resourceExists(propFile)) {
                 val properties = new Properties();
                 try {
+                    MobEngine.LOG.debug("From prop file: {}", propFile);
                     properties.load(pack.getInputStream(propFile));
                 } catch (IOException e) {
                     CommonParser.LOG.warn("Failed to parse {}", propFile.toString());
@@ -129,10 +132,15 @@ public class MobInfo {
             val iter = skins.intIterator();
             while (iter.hasNext()) {
                 val j = iter.nextInt();
-                if (j == 1) {
+                val replacementResource = new ResourceLocation(prefix + j + ".png");
+                if (ResourceScanner.hasResource(replacementResource)) {
+                    skinsList.add(replacementResource);
+                    MobEngine.LOG.debug("Added custom texture: {}", replacementResource);
+                } else if (j == 1) {
                     skinsList.add(resource);
+                    MobEngine.LOG.debug("Added default texture: {}", resource);
                 } else {
-                    skinsList.add(new ResourceLocation(prefix + j + ".png"));
+                    MobEngine.LOG.warn("Missing custom texture: {}", replacementResource);
                 }
             }
             result.add(new MobInfo(skinsList.toArray(new ResourceLocation[0]), weights, heights, biomes));
@@ -148,11 +156,19 @@ public class MobInfo {
         if (names.isEmpty()) {
             return null;
         }
+        MobEngine.LOG.debug("From path directly");
         names.sort(Comparator.naturalOrder());
         val res = new ObjectArrayList<ResourceLocation>();
         res.add(resource);
+        MobEngine.LOG.debug("Added default texture: {}", resource);
         for (val name : names) {
-            res.add(new ResourceLocation(name));
+            val replacementResource = new ResourceLocation(name);
+            if (ResourceScanner.hasResource(replacementResource)) {
+                res.add(replacementResource);
+                MobEngine.LOG.debug("Added custom texture: {}", replacementResource);
+            } else {
+                MobEngine.LOG.warn("Missing custom texture: {}", replacementResource);
+            }
         }
         return new MobInfo(res.toArray(new ResourceLocation[0]), null, null, null);
     }
