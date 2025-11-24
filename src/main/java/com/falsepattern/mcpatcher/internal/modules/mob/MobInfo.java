@@ -147,7 +147,17 @@ public class MobInfo {
             }
             val weightInts = CommonParser.parseInts(props.getProperty("weights." + i), 0, 0xFFFF);
             val biomesList = CommonParser.parseBiomes(props.getProperty("biomes." + i));
-            val heights = CommonParser.parseIntRanges(props.getProperty("heights." + i));
+
+            var heights = CommonParser.parseIntRanges(props.getProperty("heights." + i));
+            if (heights == null) {
+                val minHeight = CommonParser.parseInt(props.getProperty("minHeight." + i), Integer.MIN_VALUE);
+                val maxHeight = CommonParser.parseInt(props.getProperty("maxHeight." + i), Integer.MAX_VALUE);
+                if (minHeight != Integer.MIN_VALUE || maxHeight != Integer.MAX_VALUE) {
+                    heights = new IntRange.List();
+                    heights.add(new IntRange(minHeight, maxHeight));
+                }
+            }
+
             var weights = weightInts == null ? null : new WeightedRandom(weightInts, skins.size() + 1);
             val biomes = biomesList == null ? null : new ObjectOpenHashSet<>(biomesList);
             val skinsList = new ObjectArrayList<ResourceLocation>();
