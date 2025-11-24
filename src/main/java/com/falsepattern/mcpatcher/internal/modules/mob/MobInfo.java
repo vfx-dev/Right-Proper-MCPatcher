@@ -117,7 +117,7 @@ public class MobInfo {
                     CommonParser.LOG.warn("Failed to parse {}", propFile.toString());
                     CommonParser.LOG.warn("Stacktrace:", e);
                 }
-                result = fromProperties(properties, resource, aliasedPrefix);
+                result = fromProperties(properties, resource, prefix);
             }
             if (result == null) {
                 val info = fromTextures(resource, pack, prefix);
