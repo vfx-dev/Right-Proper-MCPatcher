@@ -25,11 +25,16 @@ package com.falsepattern.mcpatcher.internal.modules.ctm;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraftforge.common.util.ForgeDirection;
+
 import static com.falsepattern.mcpatcher.internal.modules.ctm.Axis.X;
 import static com.falsepattern.mcpatcher.internal.modules.ctm.Axis.Y;
 import static com.falsepattern.mcpatcher.internal.modules.ctm.Axis.Z;
 
 
+/**
+ * @implSpec Match order with: {@link ForgeDirection}
+ */
 @RequiredArgsConstructor
 public enum Side {
     YNeg(Y),
@@ -39,12 +44,14 @@ public enum Side {
     XNeg(X),
     XPos(X);
 
+    // @formatter:off
     public static final Side Bottom = YNeg;
-    public static final Side Top = YPos;
-    public static final Side East = ZNeg;
-    public static final Side West = ZPos;
-    public static final Side North = XNeg;
-    public static final Side South = XPos;
+    public static final Side Top    = YPos;
+    public static final Side North  = ZNeg;
+    public static final Side South  = ZPos;
+    public static final Side West   = XNeg;
+    public static final Side East   = XPos;
+    // @formatter:on
 
     public static final int MASK_SIDES = ZNeg.mask | ZPos.mask | XNeg.mask | XPos.mask;
     public static final int MASK_ALL = MASK_SIDES | YNeg.mask | YPos.mask;
