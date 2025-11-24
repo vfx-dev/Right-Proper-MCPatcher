@@ -102,8 +102,7 @@ public final class CITPropsItem extends CITPropsSingle {
         if (altTextures.isEmpty()) {
             altIcons = null;
         } else {
-            // TODO: IIcon Hashes?
-            altIcons = new Object2ObjectOpenHashMap<>();
+            altIcons = new Identity2ObjectHashMap<>();
 
             for (val entry : altTextures.entrySet()) {
                 val srcName = entry.getKey();

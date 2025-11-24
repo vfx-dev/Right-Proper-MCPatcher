@@ -102,7 +102,6 @@ public final class CITPropsArmor extends CITPropsSingle {
         if (altTextures.isEmpty()) {
             altTexLoc = null;
         } else {
-            // TODO: ResourceLocation Hashes?
             altTexLoc = new Object2ObjectOpenHashMap<>();
 
             for (val entry : altTextures.entrySet()) {
