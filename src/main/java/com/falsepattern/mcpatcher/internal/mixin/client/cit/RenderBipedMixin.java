@@ -48,9 +48,7 @@ public abstract class RenderBipedMixin implements ICITArmorRenderer {
                                                         String type,
                                                         Operation<ResourceLocation> original) {
         if (MCPatcherConfig.customItemTextures && entity instanceof EntityLivingBase) {
-            return CITEngine.replaceArmorTexture((EntityLivingBase) entity,
-                                                 stack,
-                                                 original.call(entity, stack, slot, type));
+            return CITEngine.replaceArmorTexture(stack, original.call(entity, stack, slot, type));
         } else {
             return original.call(entity, stack, slot, type);
         }

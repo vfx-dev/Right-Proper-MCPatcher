@@ -23,7 +23,7 @@
 package com.falsepattern.mcpatcher.internal.modules.cit;
 
 import com.falsepattern.mcpatcher.internal.modules.common.CollectionUtil;
-import com.falsepattern.mcpatcher.internal.modules.common.Identity2ObjectHashMap;
+import com.falsepattern.mcpatcher.internal.modules.common.ResourceScanner;
 import com.falsepattern.mcpatcher.internal.modules.overlay.ResourceGenerator;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -32,8 +32,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.Map;
@@ -41,33 +39,35 @@ import java.util.Properties;
 
 import static com.falsepattern.mcpatcher.internal.modules.cit.CITEngine.LOG;
 
-public final class CITPropsItem extends CITPropsSingle {
+public final class CITPropsArmor extends CITPropsSingle {
     /**
-     * Base icon to use when matched.
+     * Base texture to use when matched.
+     *
+     * @implNote Base textures for armor are technically not part of the spec, but I don't car
      */
-    private @Nullable IIcon icon;
+    private @Nullable ResourceLocation texLoc;
     /**
-     * Map of alternate icons to replace.
+     * Map of alternate textures to replace.
      * <p>
      * Includes mappings of both A->B and B->B in case a lookup happens twice,
-     * to avoid accidentally mapping back to {@link CITPropsItem#icon}.
+     * to avoid accidentally mapping back to {@link CITPropsArmor#texLoc}.
      */
     @Unmodifiable
-    private @Nullable Object2ObjectMap<IIcon, IIcon> altIcons;
+    private @Nullable Object2ObjectMap<ResourceLocation, ResourceLocation> altTexLoc;
 
-    public CITPropsItem(String name, Properties props) {
+    public CITPropsArmor(String name, Properties props) {
         super(name, props);
 
-        this.icon = null;
-        this.altIcons = null;
+        this.texLoc = null;
+        this.altTexLoc = null;
     }
 
-    public IIcon getIcon(IIcon original) {
-        final IIcon replacement;
-        if (altIcons != null) {
-            replacement = altIcons.getOrDefault(original, icon);
+    public ResourceLocation getTexture(ResourceLocation original) {
+        final ResourceLocation replacement;
+        if (altTexLoc != null) {
+            replacement = altTexLoc.getOrDefault(original, texLoc);
         } else {
-            replacement = icon;
+            replacement = texLoc;
         }
 
         if (replacement != null) {
@@ -94,41 +94,42 @@ public final class CITPropsItem extends CITPropsSingle {
     @Override
     public void load(TextureMap textureMap, @Nullable Map<ResourceLocation, ResourceGenerator> overlay) {
         if (texture == null) {
-            icon = null;
+            texLoc = null;
         } else {
-            icon = textureMap.registerIcon(texture);
+            texLoc = new ResourceLocation(texture + ".png");
         }
 
         if (altTextures.isEmpty()) {
-            altIcons = null;
+            altTexLoc = null;
         } else {
-            // TODO: IIcon Hashes?
-            altIcons = new Object2ObjectOpenHashMap<>();
+            // TODO: ResourceLocation Hashes?
+            altTexLoc = new Object2ObjectOpenHashMap<>();
 
             for (val entry : altTextures.entrySet()) {
                 val srcName = entry.getKey();
                 val dstName = entry.getValue();
 
-                val src = textureMap.getTextureExtry(srcName);
-                if (src != null) {
-                    val dst = textureMap.registerIcon(dstName);
-                    altIcons.put(src, dst);
+                // TODO: Vanilla has this fancy prefix, do we always expect mods to do the same?
+                val src = new ResourceLocation("textures/models/armor/" + srcName + ".png");
+                if (ResourceScanner.hasResource(src)) {
+                    val dst = new ResourceLocation(dstName + ".png");
+                    altTexLoc.put(src, dst);
                     // Required for double-lookups
-                    altIcons.put(dst, dst);
+                    altTexLoc.put(dst, dst);
                 }
             }
 
-            if (altIcons.isEmpty()) {
-                altIcons = null;
+            if (altTexLoc.isEmpty()) {
+                altTexLoc = null;
             } else {
-                altIcons = CollectionUtil.lockMap(altIcons);
+                altTexLoc = CollectionUtil.lockMap(altTexLoc);
             }
         }
     }
 
     @Override
     public boolean shouldKeep() {
-        return icon != null || altIcons != null;
+        return texLoc != null || altTexLoc != null;
     }
     // endregion
 }

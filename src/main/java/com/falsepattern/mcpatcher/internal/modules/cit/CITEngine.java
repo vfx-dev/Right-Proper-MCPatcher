@@ -64,6 +64,7 @@ public final class CITEngine {
     private static CITPropsGlobal globalProps = new CITPropsGlobal();
 
     private static @Unmodifiable Object2ObjectMap<Item, ObjectList<CITPropsItem>> itemProps = Object2ObjectMaps.emptyMap();
+    private static @Unmodifiable Object2ObjectMap<Item, ObjectList<CITPropsArmor>> armorProps = Object2ObjectMaps.emptyMap();
 
     private CITEngine() {
         throw new UnsupportedOperationException();
@@ -94,6 +95,7 @@ public final class CITEngine {
         LOG.debug("Updating Icons");
 
         itemProps = new Identity2ObjectHashMap<>();
+        armorProps = new Identity2ObjectHashMap<>();
 
         val packs = ResourceScanner.resourcePacks();
         for (val pack : packs) {
@@ -103,17 +105,8 @@ public final class CITEngine {
             updateIcons(textureMap, overlay, pack);
         }
 
-        val temp = new Identity2ObjectHashMap<Item, ObjectList<CITPropsItem>>();
-        for (val entry : itemProps.entrySet()) {
-            val item = entry.getKey();
-            val infos = entry.getValue();
-            if (infos.isEmpty()) {
-                continue;
-            }
-            infos.sort(CITPropsItem::compareTo);
-            temp.put(item, CollectionUtil.lockList(infos));
-        }
-        itemProps = CollectionUtil.lockMap(temp);
+        itemProps = lockMapRecursive(itemProps);
+        armorProps = lockMapRecursive(armorProps);
     }
 
     private static void updateIcons(@NotNull TextureMap textureMap,
@@ -164,19 +157,19 @@ public final class CITEngine {
                                     @Nullable Map<ResourceLocation, ResourceGenerator> overlay,
                                     @NotNull String name,
                                     @NotNull Properties props) {
-        val itemInfo = new CITPropsItem(name, props);
-        if (!itemInfo.isValid()) {
+        val citProps = new CITPropsItem(name, props);
+        if (!citProps.isValid()) {
             return;
         }
-        itemInfo.load(textureMap, overlay);
-        if (!itemInfo.shouldKeep()) {
+        citProps.load(textureMap, overlay);
+        if (!citProps.shouldKeep()) {
             return;
         }
 
-        val items = itemInfo.items();
+        val items = citProps.items();
         for (val item : items) {
             itemProps.computeIfAbsent(item, key -> new ObjectArrayList<>())
-                     .add(itemInfo);
+                     .add(citProps);
         }
     }
 
@@ -191,10 +184,42 @@ public final class CITEngine {
                                      @Nullable Map<ResourceLocation, ResourceGenerator> overlay,
                                      @NotNull String name,
                                      @NotNull Properties props) {
+        val citProps = new CITPropsArmor(name, props);
+        if (!citProps.isValid()) {
+            return;
+        }
+        citProps.load(textureMap, overlay);
+        if (!citProps.shouldKeep()) {
+            return;
+        }
 
+        val items = citProps.items();
+        for (val item : items) {
+            armorProps.computeIfAbsent(item, key -> new ObjectArrayList<>())
+                      .add(citProps);
+        }
+    }
+
+    private static <T extends CITPropsSingle> @Unmodifiable Object2ObjectMap<Item, ObjectList<T>> lockMapRecursive(
+            Object2ObjectMap<Item, ObjectList<T>> map) {
+        val temp = new Identity2ObjectHashMap<Item, ObjectList<T>>();
+        for (val entry : map.entrySet()) {
+            val item = entry.getKey();
+            val infos = entry.getValue();
+            if (infos.isEmpty()) {
+                continue;
+            }
+            infos.sort(CITPropsSingle::compareTo);
+            temp.put(item, CollectionUtil.lockList(infos));
+        }
+        return CollectionUtil.lockMap(temp);
     }
 
     public static IIcon replaceIcon(@Nullable ItemStack itemStack, @Nullable IIcon original) {
+        if (itemProps.isEmpty()) {
+            return original;
+        }
+
         if (itemStack == null || original == null) {
             return original;
         }
@@ -218,17 +243,35 @@ public final class CITEngine {
     /**
      * Wraps the fetching of an armor texture.
      *
-     * @param entity    Target entity wearing the armor
      * @param itemStack Item Stack containing the armor
      * @param original  Original texture
      *
      * @return Either the {@code original} texture or a replacement
      *
-     * @implNote Called from an unconditional wrap of the forge hook: {@link RenderBiped#getArmorResource}
+     * @implNote Called from the big forge hook: {@link RenderBiped#getArmorResource}
      */
-    public static ResourceLocation replaceArmorTexture(EntityLivingBase entity,
-                                                       ItemStack itemStack,
-                                                       ResourceLocation original) {
+    public static ResourceLocation replaceArmorTexture(ItemStack itemStack, ResourceLocation original) {
+        if (armorProps.isEmpty()) {
+            return original;
+        }
+
+        if (itemStack == null || original == null) {
+            return original;
+        }
+        val item = itemStack.getItem();
+        if (item == null) {
+            return original;
+        }
+        val list = armorProps.get(item);
+        if (list == null) {
+            return original;
+        }
+
+        for (val info : list) {
+            if (info.matches(itemStack)) {
+                return info.getTexture(original);
+            }
+        }
         return original;
     }
 
