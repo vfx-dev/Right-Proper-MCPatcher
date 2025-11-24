@@ -23,6 +23,7 @@
 package com.falsepattern.mcpatcher.internal.modules.ctm;
 
 import com.falsepattern.mcpatcher.Tags;
+import com.falsepattern.mcpatcher.internal.modules.common.Identity2ObjectHashMap;
 import com.falsepattern.mcpatcher.internal.modules.common.MCPMath;
 import com.falsepattern.mcpatcher.internal.modules.common.ResourceScanner;
 import com.falsepattern.mcpatcher.internal.modules.overlay.ResourceGenerator;
@@ -64,20 +65,7 @@ import java.util.Properties;
 public class CTMEngine {
     static final Logger LOG = LogManager.getLogger(Tags.MOD_NAME + " CTM");
 
-    private static final Object2ObjectMap<Block, ObjectList<CTMInfo>> blockProperties = new Object2ObjectOpenCustomHashMap<>(
-            128,
-            0.1f,
-            new Hash.Strategy<Block>() {
-                @Override
-                public int hashCode(Block o) {
-                    return System.identityHashCode(o);
-                }
-
-                @Override
-                public boolean equals(Block a, Block b) {
-                    return a == b;
-                }
-            });
+    private static final Object2ObjectMap<Block, ObjectList<CTMInfo>> blockProperties = new Identity2ObjectHashMap<>();
     private static final ObjectList<ObjectList<CTMInfo>> tileProperties = new ObjectArrayList<>();
     private static boolean multipass = false;
 
