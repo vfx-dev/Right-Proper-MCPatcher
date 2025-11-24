@@ -52,6 +52,7 @@ public class MobInfo {
     private static final String ENTITY_PATH_PREFIX = "textures/entity/";
     private static final String MCPATCHER_MOB_PATH_PREFIX = "mcpatcher/mob/";
 
+    private final @NotNull String name;
     private final @NotNull ResourceLocation @NotNull [] textures;
     private final @Nullable WeightedRandom weights;
     private final @Nullable IntRange.List heights;
@@ -117,8 +118,9 @@ public class MobInfo {
     private static @NotNull ObjectList<@NotNull MobInfo> fromProperties(@NotNull Properties props,
                                                                         @NotNull ResourceLocation resource,
                                                                         @NotNull String prefix) {
-        ObjectList<MobInfo> result = new ObjectArrayList<>();
-        for (int i = 1; i < Integer.MAX_VALUE; i++) {
+        val baseName = StringUtils.substringAfterLast(prefix, "/") + ".";
+        val result = new ObjectArrayList<MobInfo>();
+        for (var i = 1; i < Integer.MAX_VALUE; i++) {
             val skins = CommonParser.parseInts(props.getProperty("skins." + i), 0, 0xFFFF);
             if (skins == null) {
                 break;
@@ -143,9 +145,9 @@ public class MobInfo {
                     MobEngine.LOG.warn("Missing custom texture: {}", replacementResource);
                 }
             }
-            result.add(new MobInfo(skinsList.toArray(new ResourceLocation[0]), weights, heights, biomes));
+            result.add(new MobInfo(baseName + i, skinsList.toArray(new ResourceLocation[0]), weights, heights, biomes));
         }
-        result.add(new MobInfo(new ResourceLocation[]{resource}, null, null, null));
+        result.add(new MobInfo(baseName + 0,new ResourceLocation[]{resource}, null, null, null));
         return result;
     }
 
@@ -170,7 +172,8 @@ public class MobInfo {
                 MobEngine.LOG.warn("Missing custom texture: {}", replacementResource);
             }
         }
-        return new MobInfo(res.toArray(new ResourceLocation[0]), null, null, null);
+        val name = StringUtils.substringAfterLast(prefix, "/") + ".0";
+        return new MobInfo(name, res.toArray(new ResourceLocation[0]), null, null, null);
     }
 
     public ResourceLocation getTextureFor(TrackedEntity entity) {
