@@ -24,7 +24,7 @@ package com.falsepattern.mcpatcher.internal.mixin.client.cit;
 
 import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
 import com.falsepattern.mcpatcher.internal.modules.cit.CITEngine;
-import com.falsepattern.mcpatcher.internal.modules.cit.CITItemsRenamed;
+import com.falsepattern.mcpatcher.internal.modules.cit.ICITItemsRenamed;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,7 +35,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 @Mixin(Item.class)
-public abstract class ItemMixin_Epic implements CITItemsRenamed {
+public abstract class ItemMixin_Epic implements ICITItemsRenamed {
     @Shadow
     public abstract IIcon getIconFromDamage(int p_77617_1_);
 

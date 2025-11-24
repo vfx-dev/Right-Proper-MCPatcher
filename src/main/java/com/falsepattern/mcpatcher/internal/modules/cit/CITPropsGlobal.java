@@ -37,7 +37,7 @@ import static com.falsepattern.mcpatcher.internal.modules.cit.CITEngine.LOG;
 @Getter
 @Accessors(fluent = true,
            chain = false)
-public final class CITGlobalProps {
+public final class CITPropsGlobal {
     private static final Method DEFAULT_METHOD = Method.AVERAGE;
     private static final int DEFAULT_CAP = 99;
     private static final float DEFAULT_FADE = 0.5F;
@@ -48,14 +48,14 @@ public final class CITGlobalProps {
     private final float fade;
     private final boolean useGlint;
 
-    public CITGlobalProps() {
+    public CITPropsGlobal() {
         this.method = DEFAULT_METHOD;
         this.cap = DEFAULT_CAP;
         this.fade = DEFAULT_FADE;
         this.useGlint = DEFAULT_USE_GLINT;
     }
 
-    public CITGlobalProps(Properties props) {
+    public CITPropsGlobal(Properties props) {
         this.method = Method.parse(props.getProperty("method"), DEFAULT_METHOD);
         this.cap = Math.max(CommonParser.parseInt(props.getProperty("cap"), DEFAULT_CAP), 0);
         this.fade = Math.max(CommonParser.parseFloat(props.getProperty("fade"), DEFAULT_FADE), 0F);

@@ -31,7 +31,7 @@ import net.minecraft.util.IIcon;
 /**
  * Base methods get renamed by: {@link CITIconReplacementInjector}
  */
-public interface CITItemsRenamed {
+public interface ICITItemsRenamed {
     IIcon mcp$renamed$getIconIndex(ItemStack itemStack);
 
     IIcon mcp$renamed$getIcon(ItemStack stack,

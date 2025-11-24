@@ -61,9 +61,9 @@ import java.util.Properties;
 public final class CITEngine {
     static final Logger LOG = LogManager.getLogger(Tags.MOD_NAME + " CIT");
 
-    private static CITGlobalProps globalProps = new CITGlobalProps();
+    private static CITPropsGlobal globalProps = new CITPropsGlobal();
 
-    private static @Unmodifiable Object2ObjectMap<Item, ObjectList<CITItemInfo>> itemProperties = Object2ObjectMaps.emptyMap();
+    private static @Unmodifiable Object2ObjectMap<Item, ObjectList<CITPropsItem>> itemProps = Object2ObjectMaps.emptyMap();
 
     private CITEngine() {
         throw new UnsupportedOperationException();
@@ -81,10 +81,10 @@ public final class CITEngine {
             val res = ResourceScanner.getResource(new ResourceLocation("minecraft:mcpatcher/cit/cit.properties"));
             val props = new Properties();
             props.load(res.getInputStream());
-            globalProps = new CITGlobalProps(props);
+            globalProps = new CITPropsGlobal(props);
             LOG.debug("Loaded custom cit.properties");
         } catch (IOException e) {
-            globalProps = new CITGlobalProps();
+            globalProps = new CITPropsGlobal();
             LOG.debug("Loaded default cit.properties");
         }
     }
@@ -93,7 +93,7 @@ public final class CITEngine {
                                    @Nullable Map<ResourceLocation, ResourceGenerator> overlay) {
         LOG.debug("Updating Icons");
 
-        itemProperties = new Identity2ObjectHashMap<>();
+        itemProps = new Identity2ObjectHashMap<>();
 
         val packs = ResourceScanner.resourcePacks();
         for (val pack : packs) {
@@ -103,17 +103,17 @@ public final class CITEngine {
             updateIcons(textureMap, overlay, pack);
         }
 
-        val temp = new Identity2ObjectHashMap<Item, ObjectList<CITItemInfo>>();
-        for (val entry : itemProperties.entrySet()) {
+        val temp = new Identity2ObjectHashMap<Item, ObjectList<CITPropsItem>>();
+        for (val entry : itemProps.entrySet()) {
             val item = entry.getKey();
             val infos = entry.getValue();
             if (infos.isEmpty()) {
                 continue;
             }
-            infos.sort(CITItemInfo::compareTo);
+            infos.sort(CITPropsItem::compareTo);
             temp.put(item, CollectionUtil.lockList(infos));
         }
-        itemProperties = CollectionUtil.lockMap(temp);
+        itemProps = CollectionUtil.lockMap(temp);
     }
 
     private static void updateIcons(@NotNull TextureMap textureMap,
@@ -164,19 +164,19 @@ public final class CITEngine {
                                     @Nullable Map<ResourceLocation, ResourceGenerator> overlay,
                                     @NotNull String name,
                                     @NotNull Properties props) {
-        val itemInfo = new CITItemInfo(name, props);
+        val itemInfo = new CITPropsItem(name, props);
         if (!itemInfo.isValid()) {
             return;
         }
-        itemInfo.updateIcons(textureMap, overlay);
-        if (!itemInfo.hasIcons()) {
+        itemInfo.load(textureMap, overlay);
+        if (!itemInfo.shouldKeep()) {
             return;
         }
 
         val items = itemInfo.items();
         for (val item : items) {
-            itemProperties.computeIfAbsent(item, key -> new ObjectArrayList<>())
-                          .add(itemInfo);
+            itemProps.computeIfAbsent(item, key -> new ObjectArrayList<>())
+                     .add(itemInfo);
         }
     }
 
@@ -202,7 +202,7 @@ public final class CITEngine {
         if (item == null) {
             return original;
         }
-        val list = itemProperties.get(item);
+        val list = itemProps.get(item);
         if (list == null) {
             return original;
         }
