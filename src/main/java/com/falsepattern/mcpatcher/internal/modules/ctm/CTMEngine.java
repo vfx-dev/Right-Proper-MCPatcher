@@ -663,6 +663,9 @@ public class CTMEngine {
                 return neighbourBlock.getMaterial() == block.getMaterial();
             }
         } else {
+            // TODO: Related to https://github.com/vfx-dev/Right-Proper-MCPatcher/issues/9
+            //       Should natural blocks have special handling?
+            //       Ensure that @Houston and @DarkBumus are happy with any changes made.
             return neighbourBlock == block && iblockaccess.getBlockMetadata(x, y, z) == metadata;
         }
     }
