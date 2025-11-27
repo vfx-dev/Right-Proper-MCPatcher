@@ -137,6 +137,7 @@ public final class CITEngine {
                         break;
                     case "enchantment":
                     case "overlay":
+                        LOG.warn("type={} not implemented!", type);
                         addEnchantmentInfo(textureMap, overlay, name, props);
                         break;
                     case "armor":
@@ -177,7 +178,7 @@ public final class CITEngine {
                                            @Nullable Map<ResourceLocation, ResourceGenerator> overlay,
                                            @NotNull String name,
                                            @NotNull Properties props) {
-
+        // TODO: Implement CIT Enchantments
     }
 
     private static void addArmorInfo(@NotNull TextureMap textureMap,
@@ -287,6 +288,7 @@ public final class CITEngine {
      *
      * @implNote The {@code renderFn} is captured to the first call to {@link ModelBase#render} in {@link RendererLivingEntity#doRender}
      */
+    // TODO: Implement CIT Enchantments
     public static boolean renderArmorGlint(EntityLivingBase entity,
                                            ItemStack itemStack,
                                            float partialTick,
