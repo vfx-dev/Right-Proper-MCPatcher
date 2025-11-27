@@ -12,6 +12,8 @@ This mod provides various features for texture pack artists and modpack designer
   - Connected glass and other block textures, with seamless tiling
 - Better Glass
   - Resource packs can provide glass textures with semi-translucent effects
+- Custom Item Textures
+  - Different item textures based on metadata, count, NBT, etc.
 
 Planned features:
 
@@ -33,3 +35,5 @@ which would significantly slow down resource reloads.
 ## Credits
 
 Based on MCPatcher and MCPatcher: Forge, developed by `prupe` and `mist475`, respectively.
+
+@DarkBumus for hunting down bugs and early feature testing.
