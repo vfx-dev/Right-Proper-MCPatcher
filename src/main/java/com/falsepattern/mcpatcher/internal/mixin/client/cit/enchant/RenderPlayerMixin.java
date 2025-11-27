@@ -20,32 +20,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.falsepattern.mcpatcher.internal.mixin.common.cit;
+package com.falsepattern.mcpatcher.internal.mixin.client.cit.enchant;
 
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
-import com.falsepattern.mcpatcher.internal.modules.cit.CITParticleHandler;
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.falsepattern.mcpatcher.internal.modules.cit.ICITArmorGlintRenderer;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 
-@Mixin(EntityLivingBase.class)
-public abstract class EntityLivingBaseMixin {
-    @Shadow
-    public abstract boolean isClientWorld();
+@Mixin(RenderPlayer.class)
+public abstract class RenderPlayerMixin implements ICITArmorGlintRenderer {
+    @Override
+    public boolean mcp$isCustomArmorTextureSupported() {
+        return true;
+    }
 
-    @WrapMethod(method = "renderBrokenItemStack",
-                require = 1)
-    private void captureBreakingItemStack(ItemStack stack, Operation<Void> original) {
-        if (MCPatcherConfig.isCustomItemTexturesEnabled() && this.isClientWorld()) {
-            CITParticleHandler.set(stack);
-            original.call(stack);
-            CITParticleHandler.reset();
-        } else {
-            original.call(stack);
+    @Override
+    public @Nullable ItemStack mcp$getArmorInSlot(EntityLivingBase entity, int slotId) {
+        if (entity instanceof AbstractClientPlayer) {
+            return ((AbstractClientPlayer) entity).inventory.armorItemInSlot(3 - slotId);
         }
+        return null;
     }
 }

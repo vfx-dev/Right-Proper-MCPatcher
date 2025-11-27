@@ -22,7 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.modules.cit;
 
-import com.falsepattern.mcpatcher.internal.mixin.client.cit.RendererLivingEntityMixin;
+import com.falsepattern.mcpatcher.internal.mixin.client.cit.enchant.RendererLivingEntityMixin;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.renderer.entity.RenderBiped;
@@ -32,11 +32,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 
 /**
- * An interface implemented on top of {@link RendererLivingEntity}.
+ * An interface implemented on top of {@link RendererLivingEntity}, implying it supports custom armor glint rendering.
  * <p>
  * So logic can be activated in other classes such as {@link RenderBiped} and {@link RenderPlayer} with less boilerplate.
  */
-public interface ICITArmorRenderer {
+public interface ICITArmorGlintRenderer {
     /**
      * @return {@code true} if this renderer supports CIT, otherwise {@code false}
      *

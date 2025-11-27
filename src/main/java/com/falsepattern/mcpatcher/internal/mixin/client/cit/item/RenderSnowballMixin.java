@@ -20,28 +20,33 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.falsepattern.mcpatcher.internal.mixin.client.cit;
+package com.falsepattern.mcpatcher.internal.mixin.client.cit.item;
 
 import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
-import com.falsepattern.mcpatcher.internal.modules.cit.CITParticleHandler;
+import com.falsepattern.mcpatcher.internal.modules.cit.CITEngine;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import lombok.val;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-import net.minecraft.client.particle.EntityBreakingFX;
+import net.minecraft.client.renderer.entity.RenderSnowball;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.item.Item;
 import net.minecraft.util.IIcon;
 
-@Mixin(EntityBreakingFX.class)
-public abstract class EntityBreakingFXMixin {
-    @WrapOperation(method = "<init>(Lnet/minecraft/world/World;DDDLnet/minecraft/item/Item;I)V",
+@Mixin(RenderSnowball.class)
+public abstract class RenderSnowballMixin {
+    @WrapOperation(method = "doRender(Lnet/minecraft/entity/Entity;DDDFF)V",
                    at = @At(value = "INVOKE",
                             target = "Lnet/minecraft/item/Item;getIconFromDamage(I)Lnet/minecraft/util/IIcon;"),
                    require = 1)
-    private IIcon replaceIcon(Item item, int meta, Operation<IIcon> original) {
-        if (MCPatcherConfig.isCustomItemTexturesEnabled()) {
-            return CITParticleHandler.get(item, original.call(item, meta));
+    private IIcon replaceIcon(Item item, int meta, Operation<IIcon> original, @Local(argsOnly = true) Entity entity) {
+        if (MCPatcherConfig.isCustomItemTexturesEnabled() && entity instanceof EntityPotion) {
+            val itemStack = ((EntityPotion)entity).potionDamage;
+            return CITEngine.replaceIcon(itemStack, original.call(item, meta));
         } else {
             return original.call(item, meta);
         }

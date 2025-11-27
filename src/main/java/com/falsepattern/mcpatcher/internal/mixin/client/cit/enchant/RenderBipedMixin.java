@@ -20,40 +20,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.falsepattern.mcpatcher.internal.mixin.client.cit;
+package com.falsepattern.mcpatcher.internal.mixin.client.cit.enchant;
 
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
-import com.falsepattern.mcpatcher.internal.modules.cit.CITEngine;
-import com.falsepattern.mcpatcher.internal.modules.cit.ICITArmorRenderer;
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.falsepattern.mcpatcher.internal.modules.cit.ICITArmorGlintRenderer;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
 import net.minecraft.client.renderer.entity.RenderBiped;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 
 @Mixin(RenderBiped.class)
-public abstract class RenderBipedMixin implements ICITArmorRenderer {
-    @WrapMethod(method = "getArmorResource",
-                remap = false,
-                require = 1)
-    private static ResourceLocation replaceArmorTexture(Entity entity,
-                                                        ItemStack stack,
-                                                        int slot,
-                                                        String type,
-                                                        Operation<ResourceLocation> original) {
-        if (MCPatcherConfig.customItemTextures && entity instanceof EntityLivingBase) {
-            return CITEngine.replaceArmorTexture(stack, original.call(entity, stack, slot, type));
-        } else {
-            return original.call(entity, stack, slot, type);
-        }
-    }
-
+public abstract class RenderBipedMixin implements ICITArmorGlintRenderer {
     @Override
     public boolean mcp$isCustomArmorTextureSupported() {
         return true;

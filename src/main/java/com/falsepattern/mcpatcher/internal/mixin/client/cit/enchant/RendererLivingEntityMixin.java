@@ -20,12 +20,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.falsepattern.mcpatcher.internal.mixin.client.cit;
+package com.falsepattern.mcpatcher.internal.mixin.client.cit.enchant;
 
 import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
 import com.falsepattern.mcpatcher.internal.modules.cit.CITEngine;
-import com.falsepattern.mcpatcher.internal.modules.cit.ICITArmorRenderer;
-import com.llamalad7.mixinextras.expression.Definition;
+import com.falsepattern.mcpatcher.internal.modules.cit.ICITArmorGlintRenderer;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -44,7 +43,7 @@ import net.minecraft.entity.EntityLivingBase;
 
 @Mixin(value = RendererLivingEntity.class,
        priority = 800) // Early for SwanSong compat, let it wrap our methods
-public abstract class RendererLivingEntityMixin implements ICITArmorRenderer {
+public abstract class RendererLivingEntityMixin implements ICITArmorGlintRenderer {
     // TODO: This will require mod compat for ModernWarfare and CustomPlayerModels, see SwanSong hooks
     @WrapOperation(method = "doRender(Lnet/minecraft/entity/EntityLivingBase;DDDFF)V",
                    at = @At(value = "INVOKE",

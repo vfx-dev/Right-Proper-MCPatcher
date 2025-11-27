@@ -20,7 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.falsepattern.mcpatcher.internal.mixin.client.cit;
+package com.falsepattern.mcpatcher.internal.mixin.client.cit.item;
 
 import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
 import com.falsepattern.mcpatcher.internal.modules.cit.CITEngine;
