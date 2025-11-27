@@ -22,7 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.asm;
 
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 import lombok.val;
@@ -43,7 +43,7 @@ public final class CoreLoadingPlugin implements IFMLLoadingPlugin, IEarlyMixinLo
     private static final String TWEAKER = "com.falsepattern.mcpatcher.internal.asm.MixinCompatHackTweaker";
 
     public CoreLoadingPlugin() {
-        MCPatcherConfig.init();
+        ModuleConfig.init();
     }
 
     @Override

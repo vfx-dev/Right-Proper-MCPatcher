@@ -22,6 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.asm;
 
+import com.falsepattern.mcpatcher.internal.config.MixinConfig;
 import lombok.NoArgsConstructor;
 import org.intellij.lang.annotations.Language;
 
@@ -41,7 +42,9 @@ public final class MixinCompatHackTweaker implements ITweaker {
 
     @Override
     public String[] getLaunchArguments() {
-        Launch.classLoader.registerTransformer(TRANSFORMER);
+        if (MixinConfig.customItemTexturesMixins == MixinConfig.CITMixinStrength.Epic) {
+            Launch.classLoader.registerTransformer(TRANSFORMER);
+        }
         return new String[0];
     }
 

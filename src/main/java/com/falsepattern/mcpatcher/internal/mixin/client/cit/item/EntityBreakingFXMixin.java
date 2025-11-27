@@ -22,7 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.mixin.client.cit.item;
 
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.falsepattern.mcpatcher.internal.modules.cit.CITParticleHandler;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -40,7 +40,7 @@ public abstract class EntityBreakingFXMixin {
                             target = "Lnet/minecraft/item/Item;getIconFromDamage(I)Lnet/minecraft/util/IIcon;"),
                    require = 1)
     private IIcon replaceIcon(Item item, int meta, Operation<IIcon> original) {
-        if (MCPatcherConfig.isCustomItemTexturesEnabled()) {
+        if (ModuleConfig.isCustomItemTexturesEnabled()) {
             return CITParticleHandler.get(item, original.call(item, meta));
         } else {
             return original.call(item, meta);

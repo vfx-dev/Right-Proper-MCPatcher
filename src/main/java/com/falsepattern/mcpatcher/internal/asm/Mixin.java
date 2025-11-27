@@ -26,7 +26,8 @@ import com.falsepattern.lib.mixin.v2.MixinHelper;
 import com.falsepattern.lib.mixin.v2.SidedMixins;
 import com.falsepattern.lib.mixin.v2.TaggedMod;
 import com.falsepattern.mcpatcher.Tags;
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.config.MixinConfig;
+import com.falsepattern.mcpatcher.internal.config.MixinConfig.CITMixinStrength;
 import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 import com.gtnewhorizon.gtnhmixins.builders.MixinBuilder;
 import lombok.Getter;
@@ -43,40 +44,39 @@ import static com.falsepattern.lib.mixin.v2.MixinHelper.require;
 public enum Mixin implements IMixins {
     //@formatter:off
     ConnectedTextures(Phase.EARLY,
-                      () -> MCPatcherConfig.connectedTexturesMixins,
+                      () -> MixinConfig.connectedTexturesMixins,
                       client("ctm.RenderBlocksMixin",
                              "ctm.TextureAtlasSpriteMixin",
                              "ctm.TextureMapMixin")),
     ConnectedTextures_NoOverlay(Phase.EARLY,
-                                () -> MCPatcherConfig.connectedTexturesMixins && !MCPatcherConfig.resourcePackOverlay,
+                                () -> MixinConfig.connectedTexturesMixins && !MixinConfig.resourcePackOverlayMixins,
                                 client("ctm.TextureMapMixin_NoOverlay")),
     ConnectedTextures_Overlay(Phase.EARLY,
-                              () -> MCPatcherConfig.connectedTexturesMixins && MCPatcherConfig.resourcePackOverlay,
+                              () -> MixinConfig.connectedTexturesMixins && MixinConfig.resourcePackOverlayMixins,
                               client("ctm.TextureMapMixin_Overlay")),
 
     RandomMobs(Phase.EARLY,
-               () -> MCPatcherConfig.randomMobsMixins,
+               () -> MixinConfig.randomMobsMixins,
                client("mob.EntityMixin",
                       "mob.RenderGlobalMixin",
                       "mob.TextureManagerMixin")),
     RandomMobs_DamageIndicators(Phase.LATE,
-                                () -> MCPatcherConfig.randomMobsMixins,
+                                () -> MixinConfig.randomMobsMixins,
                                 require(TargetMod.DamageIndicators),
                                 client("mob.compat.damageindicators.DIGuiToolsMixin")),
 
     BetterGlass(Phase.EARLY,
-                () -> MCPatcherConfig.betterGlass,
+                () -> MixinConfig.betterGlassMixins,
                 client("glass.BlockBeaconMixin",
                        "glass.BlockGlassMixin",
                        "glass.BlockPaneMixin")),
 
     ResourcePackOverlay(Phase.EARLY,
-                        () -> MCPatcherConfig.resourcePackOverlay,
+                        () -> MixinConfig.resourcePackOverlayMixins,
                         client("overlay.TextureMapMixin")),
 
     CustomItemTextures(Phase.EARLY,
-                       () -> MCPatcherConfig.customItemTexturesMixins,
-                       client("cit.item.ItemMixin_Epic"),
+                       () -> MixinConfig.customItemTexturesMixins != CITMixinStrength.Disabled,
                        client("cit.item.RenderSnowballMixin"),
                        client("cit.item.EntityLivingBaseMixin"),
                        client("cit.item.EntityBreakingFXMixin"),
@@ -84,11 +84,22 @@ public enum Mixin implements IMixins {
                        client("cit.enchant.RendererLivingEntityMixin"),
                        client("cit.enchant.RenderBipedMixin"),
                        client("cit.enchant.RenderPlayerMixin")),
+    CustomItemTextures_Weak(Phase.EARLY,
+                       () -> MixinConfig.customItemTexturesMixins == CITMixinStrength.Weak,
+                       client("cit.item.ItemMixin_Weak")),
+    CustomItemTextures_Regular(Phase.EARLY,
+                            () -> MixinConfig.customItemTexturesMixins == CITMixinStrength.Regular,
+                            client("cit.item.ItemMixin_Regular")),
+    CustomItemTextures_Epic(Phase.EARLY,
+                            () -> MixinConfig.customItemTexturesMixins == CITMixinStrength.Epic,
+                            client("cit.item.ItemMixin_Epic")),
     CustomItemTextures_NoOverlay(Phase.EARLY,
-                                () -> MCPatcherConfig.customItemTexturesMixins && !MCPatcherConfig.resourcePackOverlay,
+                                 () -> MixinConfig.customItemTexturesMixins != CITMixinStrength.Disabled &&
+                                       !MixinConfig.resourcePackOverlayMixins,
                                 client("cit.TextureMapMixin_NoOverlay")),
     CustomItemTextures_Overlay(Phase.EARLY,
-                              () -> MCPatcherConfig.customItemTexturesMixins && MCPatcherConfig.resourcePackOverlay,
+                               () -> MixinConfig.customItemTexturesMixins != CITMixinStrength.Disabled &&
+                                     MixinConfig.resourcePackOverlayMixins,
                               client("cit.TextureMapMixin_Overlay")),
 
     //@formatter:on

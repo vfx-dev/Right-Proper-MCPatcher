@@ -22,7 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.mixin.client.cit.item;
 
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.falsepattern.mcpatcher.internal.modules.cit.CITEngine;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -37,7 +37,7 @@ import net.minecraft.util.IIcon;
 public abstract class ItemMixin_Weak {
     @WrapMethod(method = "getIconIndex(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/util/IIcon;")
     private IIcon replaceIcon(ItemStack itemStack, Operation<IIcon> original) {
-        if (MCPatcherConfig.isCustomItemTexturesEnabled()) {
+        if (ModuleConfig.isCustomItemTexturesEnabled()) {
             return CITEngine.replaceIcon(itemStack, original.call(itemStack));
         } else {
             return original.call(itemStack);
@@ -52,7 +52,7 @@ public abstract class ItemMixin_Weak {
                               ItemStack usingItem,
                               int useRemaining,
                               Operation<IIcon> original) {
-        if (MCPatcherConfig.isCustomItemTexturesEnabled()) {
+        if (ModuleConfig.isCustomItemTexturesEnabled()) {
             return CITEngine.replaceIcon(stack, original.call(stack, renderPass, player, usingItem, useRemaining));
         } else {
             return original.call(stack, renderPass, player, usingItem, useRemaining);
@@ -62,7 +62,7 @@ public abstract class ItemMixin_Weak {
     @WrapMethod(method = "getIcon(Lnet/minecraft/item/ItemStack;I)Lnet/minecraft/util/IIcon;",
                 remap = false)
     private IIcon replaceIcon(ItemStack stack, int pass, Operation<IIcon> original) {
-        if (MCPatcherConfig.isCustomItemTexturesEnabled()) {
+        if (ModuleConfig.isCustomItemTexturesEnabled()) {
             return CITEngine.replaceIcon(stack, original.call(stack, pass));
         } else {
             return original.call(stack, pass);

@@ -22,7 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.mixin.client.ctm;
 
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.falsepattern.mcpatcher.internal.modules.ctm.CTMEngine;
 import com.falsepattern.mcpatcher.internal.modules.ctm.PaneRenderHelper;
 import com.falsepattern.mcpatcher.internal.modules.ctm.Side;
@@ -75,7 +75,7 @@ public abstract class RenderBlocksMixin {
                                                 argsOnly = true) int y,
                                          @Local(ordinal = 2,
                                                 argsOnly = true) int z) {
-        if (MCPatcherConfig.connectedTextures && overrideBlockTexture == null) {
+        if (ModuleConfig.connectedTextures && overrideBlockTexture == null) {
             return CTMEngine.getCTMIconMultiPass(blockAccess, block, x, y, z, null, icon);
         }
         return icon;
@@ -94,7 +94,7 @@ public abstract class RenderBlocksMixin {
                                                  argsOnly = true) int y,
                                           @Local(ordinal = 2,
                                                  argsOnly = true) int z) {
-        if (MCPatcherConfig.connectedTextures && overrideBlockTexture == null) {
+        if (ModuleConfig.connectedTextures && overrideBlockTexture == null) {
             return CTMEngine.getCTMIconMultiPass(blockAccess, block, x, y, z, Side.YPos, icon);
         }
         return icon;
@@ -113,7 +113,7 @@ public abstract class RenderBlocksMixin {
                                           argsOnly = true) int y,
                                    @Local(ordinal = 2,
                                           argsOnly = true) int z) {
-        if (MCPatcherConfig.connectedTextures && overrideBlockTexture == null) {
+        if (ModuleConfig.connectedTextures && overrideBlockTexture == null) {
             val meta = blockAccess.getBlockMetadata(x, y, z);
             return CTMEngine.getCTMIconMultiPass(blockAccess, block, x, y, z, Side.fromMCDirection(meta), icon);
         }
@@ -133,7 +133,7 @@ public abstract class RenderBlocksMixin {
                                         argsOnly = true) int y,
                                  @Local(ordinal = 2,
                                         argsOnly = true) int z) {
-        if (MCPatcherConfig.connectedTextures && overrideBlockTexture == null) {
+        if (ModuleConfig.connectedTextures && overrideBlockTexture == null) {
             val meta = blockAccess.getBlockMetadata(x, y, z);
             var side = Side.YNeg;
             if ((meta & 1) != 0) {
@@ -197,7 +197,7 @@ public abstract class RenderBlocksMixin {
                                                   argsOnly = true) int y,
                                            @Local(ordinal = 2,
                                                   argsOnly = true) int z) {
-        if (MCPatcherConfig.connectedTextures && overrideBlockTexture == null) {
+        if (ModuleConfig.connectedTextures && overrideBlockTexture == null) {
             return CTMEngine.getCTMIconMultiPass(blockAccess, block, x, y, z, Side.ZNeg, icon);
         }
         return icon;
@@ -216,7 +216,7 @@ public abstract class RenderBlocksMixin {
                                            argsOnly = true) int y,
                                     @Local(ordinal = 2,
                                            argsOnly = true) int z) {
-        if (MCPatcherConfig.connectedTextures && overrideBlockTexture == null) {
+        if (ModuleConfig.connectedTextures && overrideBlockTexture == null) {
             return CTMEngine.getCTMIconMultiPass(blockAccess, block, x, y, z, Side.YPos, icon);
         }
         return icon;
@@ -239,7 +239,7 @@ public abstract class RenderBlocksMixin {
                                          argsOnly = true) int y,
                                   @Local(ordinal = 2,
                                          argsOnly = true) int z) {
-        if (MCPatcherConfig.connectedTextures) {
+        if (ModuleConfig.connectedTextures) {
             icon = CTMEngine.getCTMIconMultiPass(blockAccess, block, x, y, z, null, icon);
         }
         original.call(self, icon);
@@ -256,7 +256,7 @@ public abstract class RenderBlocksMixin {
                                         argsOnly = true) double y,
                                  @Local(ordinal = 2,
                                         argsOnly = true) double z) {
-        if (MCPatcherConfig.connectedTextures && overrideBlockTexture == null) {
+        if (ModuleConfig.connectedTextures && overrideBlockTexture == null) {
             return CTMEngine.getCTMIconMultiPass(blockAccess, block, (int) x, (int) y, (int) z, Side.XNeg, icon);
         }
         return icon;
@@ -273,7 +273,7 @@ public abstract class RenderBlocksMixin {
                                         argsOnly = true) double y,
                                  @Local(ordinal = 2,
                                         argsOnly = true) double z) {
-        if (MCPatcherConfig.connectedTextures && overrideBlockTexture == null) {
+        if (ModuleConfig.connectedTextures && overrideBlockTexture == null) {
             return CTMEngine.getCTMIconMultiPass(blockAccess, block, (int) x, (int) y, (int) z, Side.XPos, icon);
         }
         return icon;
@@ -290,7 +290,7 @@ public abstract class RenderBlocksMixin {
                                         argsOnly = true) double y,
                                  @Local(ordinal = 2,
                                         argsOnly = true) double z) {
-        if (MCPatcherConfig.connectedTextures && overrideBlockTexture == null) {
+        if (ModuleConfig.connectedTextures && overrideBlockTexture == null) {
             return CTMEngine.getCTMIconMultiPass(blockAccess, block, (int) x, (int) y, (int) z, Side.YNeg, icon);
         }
         return icon;
@@ -307,7 +307,7 @@ public abstract class RenderBlocksMixin {
                                         argsOnly = true) double y,
                                  @Local(ordinal = 2,
                                         argsOnly = true) double z) {
-        if (MCPatcherConfig.connectedTextures && overrideBlockTexture == null) {
+        if (ModuleConfig.connectedTextures && overrideBlockTexture == null) {
             return CTMEngine.getCTMIconMultiPass(blockAccess, block, (int) x, (int) y, (int) z, Side.YPos, icon);
         }
         return icon;
@@ -324,7 +324,7 @@ public abstract class RenderBlocksMixin {
                                         argsOnly = true) double y,
                                  @Local(ordinal = 2,
                                         argsOnly = true) double z) {
-        if (MCPatcherConfig.connectedTextures && overrideBlockTexture == null) {
+        if (ModuleConfig.connectedTextures && overrideBlockTexture == null) {
             return CTMEngine.getCTMIconMultiPass(blockAccess, block, (int) x, (int) y, (int) z, Side.ZNeg, icon);
         }
         return icon;
@@ -341,7 +341,7 @@ public abstract class RenderBlocksMixin {
                                         argsOnly = true) double y,
                                  @Local(ordinal = 2,
                                         argsOnly = true) double z) {
-        if (MCPatcherConfig.connectedTextures && overrideBlockTexture == null) {
+        if (ModuleConfig.connectedTextures && overrideBlockTexture == null) {
             return CTMEngine.getCTMIconMultiPass(blockAccess, block, (int) x, (int) y, (int) z, Side.ZPos, icon);
         }
         return icon;

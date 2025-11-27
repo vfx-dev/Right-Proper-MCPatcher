@@ -22,7 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.mixin.client.glass;
 
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import org.spongepowered.asm.mixin.Mixin;
 
 import net.minecraft.block.Block;
@@ -37,6 +37,6 @@ public abstract class BlockPaneMixin extends Block {
 
     @Override
     public int getRenderBlockPass() {
-        return MCPatcherConfig.betterGlass ? 1 : super.getRenderBlockPass();
+        return ModuleConfig.betterGlass ? 1 : super.getRenderBlockPass();
     }
 }

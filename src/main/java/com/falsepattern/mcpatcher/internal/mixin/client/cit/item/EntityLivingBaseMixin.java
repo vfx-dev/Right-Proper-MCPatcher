@@ -22,7 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.mixin.client.cit.item;
 
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.falsepattern.mcpatcher.internal.modules.cit.CITParticleHandler;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -40,7 +40,7 @@ public abstract class EntityLivingBaseMixin {
     @WrapMethod(method = "renderBrokenItemStack",
                 require = 1)
     private void captureBreakingItemStack(ItemStack stack, Operation<Void> original) {
-        if (MCPatcherConfig.isCustomItemTexturesEnabled() && this.isClientWorld()) {
+        if (ModuleConfig.isCustomItemTexturesEnabled() && this.isClientWorld()) {
             CITParticleHandler.set(stack);
             original.call(stack);
             CITParticleHandler.reset();

@@ -22,7 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.mixin.client.glass;
 
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
@@ -41,6 +41,6 @@ public abstract class BlockGlassMixin extends BlockBreakable {
                     constant = @Constant(intValue = 0),
                     require = 1)
     private int getPass(int constant) {
-        return MCPatcherConfig.betterGlass ? 1 : constant;
+        return ModuleConfig.betterGlass ? 1 : constant;
     }
 }

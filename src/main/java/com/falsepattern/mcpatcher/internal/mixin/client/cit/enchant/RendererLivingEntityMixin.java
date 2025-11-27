@@ -22,7 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.mixin.client.cit.enchant;
 
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.falsepattern.mcpatcher.internal.modules.cit.CITEngine;
 import com.falsepattern.mcpatcher.internal.modules.cit.ICITArmorGlintRenderer;
 import com.llamalad7.mixinextras.expression.Expression;
@@ -60,7 +60,7 @@ public abstract class RendererLivingEntityMixin implements ICITArmorGlintRendere
                                              final float scale,
                                              final Operation<Void> original,
                                              @Share("renderFn") LocalRef<Runnable> renderFn) {
-        if (MCPatcherConfig.customItemTextures && mcp$isCustomArmorTextureSupported()) {
+        if (ModuleConfig.customItemTextures && mcp$isCustomArmorTextureSupported()) {
             renderFn.set(() -> original.call(instance,
                                              entity,
                                              limbSwing,
@@ -91,7 +91,7 @@ public abstract class RendererLivingEntityMixin implements ICITArmorGlintRendere
                                      @Local(ordinal = 1) int i,
                                      @Share("renderFn") LocalRef<Runnable> renderFn) {
         // TODO: Compat with any mod that wants to add a toggle to disable or alter armor glints?
-        if (MCPatcherConfig.customItemTextures && original && mcp$isCustomArmorTextureSupported()) {
+        if (ModuleConfig.customItemTextures && original && mcp$isCustomArmorTextureSupported()) {
             if (renderFn.get() == null) {
                 return true;
             }

@@ -22,13 +22,34 @@
 
 package com.falsepattern.mcpatcher.internal.config;
 
+import com.falsepattern.lib.config.ConfigException;
+import com.falsepattern.lib.config.SimpleGuiConfig;
 import com.falsepattern.lib.config.SimpleGuiFactory;
+import com.falsepattern.mcpatcher.Tags;
+import lombok.NoArgsConstructor;
+import lombok.val;
 
 import net.minecraft.client.gui.GuiScreen;
 
-public class MCPatcherGuiFactory implements SimpleGuiFactory {
+import java.util.ArrayList;
+
+@NoArgsConstructor
+public final class MCPatcherGuiFactory implements SimpleGuiFactory {
     @Override
     public Class<? extends GuiScreen> mainConfigGuiClass() {
         return MCPatcherGuiConfig.class;
+    }
+
+    private static Class<?>[] getConfigClasses() {
+        val result = new ArrayList<Class<?>>();
+        result.add(ModuleConfig.class);
+        result.add(MixinConfig.class);
+        return result.toArray(new Class<?>[0]);
+    }
+
+    public static class MCPatcherGuiConfig extends SimpleGuiConfig {
+        public MCPatcherGuiConfig(GuiScreen parent) throws ConfigException {
+            super(parent, Tags.MOD_ID, Tags.MOD_NAME, getConfigClasses());
+        }
     }
 }

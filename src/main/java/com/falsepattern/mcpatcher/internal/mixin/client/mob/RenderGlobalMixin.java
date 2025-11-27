@@ -22,7 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.mixin.client.mob;
 
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.falsepattern.mcpatcher.internal.modules.mob.MobEngine;
 import com.llamalad7.mixinextras.sugar.Local;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,7 +42,7 @@ public abstract class RenderGlobalMixin {
                      shift = At.Shift.AFTER),
             require = 1)
     private void mob_beginEntities(CallbackInfo ci) {
-        if (MCPatcherConfig.randomMobs) {
+        if (ModuleConfig.randomMobs) {
             MobEngine.beginEntities();
         }
     }
@@ -53,7 +53,7 @@ public abstract class RenderGlobalMixin {
                      ordinal = 1),
             require = 1)
     private void mob_nextEntity(CallbackInfo ci, @Local(ordinal = 0) Entity entity) {
-        if (MCPatcherConfig.randomMobs) {
+        if (ModuleConfig.randomMobs) {
             MobEngine.nextEntity(entity);
         }
     }
@@ -64,7 +64,7 @@ public abstract class RenderGlobalMixin {
                      args = "ldc=blockentities"),
             require = 1)
     private void mob_endEntities(CallbackInfo ci) {
-        if (MCPatcherConfig.randomMobs) {
+        if (ModuleConfig.randomMobs) {
             MobEngine.endEntities();
         }
     }

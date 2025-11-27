@@ -22,7 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.mixin.client.mob;
 
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.falsepattern.mcpatcher.internal.modules.mob.MobEngine;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -39,7 +39,7 @@ public abstract class TextureManagerMixin {
                     argsOnly = true,
                     require = 1)
     private ResourceLocation mob_getTexture(ResourceLocation original) {
-        if (MCPatcherConfig.randomMobs && MobEngine.isActive()) {
+        if (ModuleConfig.randomMobs && MobEngine.isActive()) {
             return MobEngine.getTexture(original);
         }
         return original;

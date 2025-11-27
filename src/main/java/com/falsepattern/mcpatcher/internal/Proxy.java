@@ -23,7 +23,7 @@
 package com.falsepattern.mcpatcher.internal;
 
 import com.falsepattern.mcpatcher.Tags;
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.falsepattern.mcpatcher.internal.modules.cit.CITEngine;
 import com.falsepattern.mcpatcher.internal.modules.mob.MobEngine;
 import lombok.val;
@@ -56,9 +56,9 @@ public class Proxy {
             val resMan = (IReloadableResourceManager) mc.getResourceManager();
             resMan.registerReloadListener(this::reloadResources);
 
-            connectedTextures = MCPatcherConfig.isConnectedTexturesEnabled();
-            customItemTextures = MCPatcherConfig.isCustomItemTexturesEnabled();
-            randomMobs = MCPatcherConfig.isRandomMobsEnabled();
+            connectedTextures = ModuleConfig.isConnectedTexturesEnabled();
+            customItemTextures = ModuleConfig.isCustomItemTexturesEnabled();
+            randomMobs = ModuleConfig.isRandomMobsEnabled();
 
             FMLCommonHandler.instance()
                             .bus()
@@ -77,28 +77,28 @@ public class Proxy {
             // - Random mobs are disabled
             //   (textures are dynamically loaded,so we reload when disabling to clear vram)
             var doResourceRefresh = false;
-            doResourceRefresh |= connectedTextures != MCPatcherConfig.isConnectedTexturesEnabled();
-            doResourceRefresh |= customItemTextures != MCPatcherConfig.isCustomItemTexturesEnabled();
-            doResourceRefresh |= randomMobs && !MCPatcherConfig.isRandomMobsEnabled();
+            doResourceRefresh |= connectedTextures != ModuleConfig.isConnectedTexturesEnabled();
+            doResourceRefresh |= customItemTextures != ModuleConfig.isCustomItemTexturesEnabled();
+            doResourceRefresh |= randomMobs && !ModuleConfig.isRandomMobsEnabled();
 
             if (doResourceRefresh) {
                 Minecraft.getMinecraft()
                          .scheduleResourcesRefresh();
             }
 
-            connectedTextures = MCPatcherConfig.isConnectedTexturesEnabled();
-            customItemTextures = MCPatcherConfig.isCustomItemTexturesEnabled();
-            randomMobs = MCPatcherConfig.isRandomMobsEnabled();
+            connectedTextures = ModuleConfig.isConnectedTexturesEnabled();
+            customItemTextures = ModuleConfig.isCustomItemTexturesEnabled();
+            randomMobs = ModuleConfig.isRandomMobsEnabled();
         }
 
         private void reloadResources(IResourceManager resourceManager) {
             Share.log.debug("Reloading Resources");
 
-            if (MCPatcherConfig.isCustomItemTexturesEnabled()) {
+            if (ModuleConfig.isCustomItemTexturesEnabled()) {
                 CITEngine.reloadResources();
             }
 
-            if (MCPatcherConfig.isRandomMobsEnabled()) {
+            if (ModuleConfig.isRandomMobsEnabled()) {
                 MobEngine.reloadResources();
             }
         }

@@ -22,7 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.mixin.client.cit.item;
 
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.falsepattern.mcpatcher.internal.modules.cit.CITEngine;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -44,7 +44,7 @@ public abstract class RenderSnowballMixin {
                             target = "Lnet/minecraft/item/Item;getIconFromDamage(I)Lnet/minecraft/util/IIcon;"),
                    require = 1)
     private IIcon replaceIcon(Item item, int meta, Operation<IIcon> original, @Local(argsOnly = true) Entity entity) {
-        if (MCPatcherConfig.isCustomItemTexturesEnabled() && entity instanceof EntityPotion) {
+        if (ModuleConfig.isCustomItemTexturesEnabled() && entity instanceof EntityPotion) {
             val itemStack = ((EntityPotion)entity).potionDamage;
             return CITEngine.replaceIcon(itemStack, original.call(item, meta));
         } else {

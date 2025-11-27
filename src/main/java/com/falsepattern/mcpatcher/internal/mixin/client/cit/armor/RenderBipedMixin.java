@@ -22,17 +22,14 @@
 
 package com.falsepattern.mcpatcher.internal.mixin.client.cit.armor;
 
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.falsepattern.mcpatcher.internal.modules.cit.CITEngine;
-import com.falsepattern.mcpatcher.internal.modules.cit.ICITArmorGlintRenderer;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -47,7 +44,7 @@ public abstract class RenderBipedMixin {
                                                         int slot,
                                                         String type,
                                                         Operation<ResourceLocation> original) {
-        if (MCPatcherConfig.customItemTextures && entity instanceof EntityLivingBase) {
+        if (ModuleConfig.customItemTextures && entity instanceof EntityLivingBase) {
             return CITEngine.replaceArmorTexture(stack, original.call(entity, stack, slot, type));
         } else {
             return original.call(entity, stack, slot, type);

@@ -22,7 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.mixin.client.cit.item;
 
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.falsepattern.mcpatcher.internal.modules.cit.CITEngine;
 import com.falsepattern.mcpatcher.internal.modules.cit.ICITItemsRenamed;
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,7 +48,7 @@ public abstract class ItemMixin_Epic implements ICITItemsRenamed {
      */
     @Overwrite
     public IIcon getIconIndex(ItemStack itemStack) {
-        if (MCPatcherConfig.isCustomItemTexturesEnabled()) {
+        if (ModuleConfig.isCustomItemTexturesEnabled()) {
             return CITEngine.replaceIcon(itemStack, mcp$renamed$getIconIndex(itemStack));
         } else {
             return mcp$renamed$getIconIndex(itemStack);
@@ -61,7 +61,7 @@ public abstract class ItemMixin_Epic implements ICITItemsRenamed {
      */
     @Overwrite(remap = false)
     public IIcon getIcon(ItemStack stack, int pass, EntityPlayer player, ItemStack usingItem, int useRemaining) {
-        if (MCPatcherConfig.isCustomItemTexturesEnabled()) {
+        if (ModuleConfig.isCustomItemTexturesEnabled()) {
             return CITEngine.replaceIcon(stack, mcp$renamed$getIcon(stack, pass, player, usingItem, useRemaining));
         } else {
             return mcp$renamed$getIcon(stack, pass, player, usingItem, useRemaining);
@@ -74,7 +74,7 @@ public abstract class ItemMixin_Epic implements ICITItemsRenamed {
      */
     @Overwrite(remap = false)
     public IIcon getIcon(ItemStack stack, int pass) {
-        if (MCPatcherConfig.isCustomItemTexturesEnabled()) {
+        if (ModuleConfig.isCustomItemTexturesEnabled()) {
             return CITEngine.replaceIcon(stack, mcp$renamed$getIcon(stack, pass));
         } else {
             return mcp$renamed$getIcon(stack, pass);

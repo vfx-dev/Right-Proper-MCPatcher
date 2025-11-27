@@ -23,7 +23,7 @@
 package com.falsepattern.mcpatcher.internal.modules.ctm;
 
 import com.falsepattern.mcpatcher.internal.Share;
-import com.falsepattern.mcpatcher.internal.config.MCPatcherConfig;
+import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import ganymedes01.etfuturum.configuration.configs.ConfigMixins;
 import lombok.val;
 
@@ -153,7 +153,7 @@ public class PaneRenderHelper {
                                 : ((BlockPane) block).func_150097_e();
         }
 
-        if (MCPatcherConfig.connectedTextures && rb.overrideBlockTexture == null) {
+        if (ModuleConfig.connectedTextures && rb.overrideBlockTexture == null) {
             xNegIcon = CTMEngine.getCTMIconMultiPass(blockAccess, block, x, y, z, Side.XNeg, xNegIcon);
             xPosIcon = CTMEngine.getCTMIconMultiPass(blockAccess, block, x, y, z, Side.XPos, xNegIcon);
             zNegIcon = CTMEngine.getCTMIconMultiPass(blockAccess, block, x, y, z, Side.ZNeg, zPosIcon);
