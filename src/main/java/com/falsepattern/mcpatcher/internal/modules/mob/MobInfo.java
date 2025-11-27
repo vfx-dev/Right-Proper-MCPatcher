@@ -177,7 +177,7 @@ public class MobInfo {
             }
             result.add(new MobInfo(baseName + i, skinsList.toArray(new ResourceLocation[0]), weights, heights, biomes));
         }
-        result.add(new MobInfo(baseName + 0,new ResourceLocation[]{resource}, null, null, null));
+        result.add(new MobInfo(baseName + 0, new ResourceLocation[]{resource}, null, null, null));
         return result;
     }
 

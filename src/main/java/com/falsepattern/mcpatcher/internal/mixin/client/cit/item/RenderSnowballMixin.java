@@ -45,7 +45,7 @@ public abstract class RenderSnowballMixin {
                    require = 1)
     private IIcon replaceIcon(Item item, int meta, Operation<IIcon> original, @Local(argsOnly = true) Entity entity) {
         if (ModuleConfig.isCustomItemTexturesEnabled() && entity instanceof EntityPotion) {
-            val itemStack = ((EntityPotion)entity).potionDamage;
+            val itemStack = ((EntityPotion) entity).potionDamage;
             return CITEngine.replaceIcon(itemStack, original.call(item, meta));
         } else {
             return original.call(item, meta);

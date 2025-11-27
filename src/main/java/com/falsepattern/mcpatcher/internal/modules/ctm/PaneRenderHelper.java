@@ -111,13 +111,11 @@ public class PaneRenderHelper {
 
         val meta = blockAccess.getBlockMetadata(x, y, z);
 
-        val edgeYPos = blockAccess.getBlock(x, y + 1, z) != block ||
-                   blockAccess.getBlockMetadata(x, y + 1, z) != meta;
+        val edgeYPos = blockAccess.getBlock(x, y + 1, z) != block || blockAccess.getBlockMetadata(x, y + 1, z) != meta;
         if (!edgeYPos) {
             yPosMask = getMask(blockAccess, block, x, y + 1, z, true);
         }
-        val edgeYNeg = blockAccess.getBlock(x, y - 1, z) != block ||
-                   blockAccess.getBlockMetadata(x, y - 1, z) != meta;
+        val edgeYNeg = blockAccess.getBlock(x, y - 1, z) != block || blockAccess.getBlockMetadata(x, y - 1, z) != meta;
         if (!edgeYNeg) {
             yNegMask = getMask(blockAccess, block, x, y - 1, z, true);
         }

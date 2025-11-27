@@ -137,10 +137,10 @@ public abstract class TextureMapMixin extends AbstractTexture {
 
     @WrapOperation(method = "completeResourceLocation",
                    at = @At(value = "INVOKE",
-                       target = "Ljava/lang/String;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
-                       ordinal = 0),
+                            target = "Ljava/lang/String;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+                            ordinal = 0),
                    slice = @Slice(from = @At(value = "CONSTANT",
-                                        args = "stringValue=%s/%s%s")),
+                                             args = "stringValue=%s/%s%s")),
                    require = 1)
     private String completeResourceLocationStandard(String format, Object[] args, Operation<String> original) {
         if (mcp$isCTMPath((String) args[1])) {
@@ -151,12 +151,12 @@ public abstract class TextureMapMixin extends AbstractTexture {
     }
 
     @WrapOperation(method = "completeResourceLocation",
-              at = @At(value = "INVOKE",
-                       target = "Ljava/lang/String;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
-                       ordinal = 0),
-              slice = @Slice(from = @At(value = "CONSTANT",
-                                        args = "stringValue=%s/mipmaps/%s.%d%s")),
-              require = 1)
+                   at = @At(value = "INVOKE",
+                            target = "Ljava/lang/String;format(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;",
+                            ordinal = 0),
+                   slice = @Slice(from = @At(value = "CONSTANT",
+                                             args = "stringValue=%s/mipmaps/%s.%d%s")),
+                   require = 1)
     private String completeResourceLocationMipmap(String format, Object[] args, Operation<String> original) {
         if (mcp$isCTMPath((String) args[1])) {
             return original.call("%smipmap%d%s", new Object[]{args[1], args[2], args[3]});
