@@ -27,10 +27,8 @@ import com.falsepattern.mcpatcher.internal.modules.common.Identity2ObjectHashMap
 import com.falsepattern.mcpatcher.internal.modules.common.MCPMath;
 import com.falsepattern.mcpatcher.internal.modules.common.ResourceScanner;
 import com.falsepattern.mcpatcher.internal.modules.overlay.ResourceGenerator;
-import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
