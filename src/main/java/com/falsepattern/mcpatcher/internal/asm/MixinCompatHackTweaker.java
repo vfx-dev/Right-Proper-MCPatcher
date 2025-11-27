@@ -42,9 +42,7 @@ public final class MixinCompatHackTweaker implements ITweaker {
 
     @Override
     public String[] getLaunchArguments() {
-        if (MixinConfig.customItemTexturesMixins == MixinConfig.CITMixinStrength.Epic) {
-            Launch.classLoader.registerTransformer(TRANSFORMER);
-        }
+        Launch.classLoader.registerTransformer(TRANSFORMER);
         return new String[0];
     }
 

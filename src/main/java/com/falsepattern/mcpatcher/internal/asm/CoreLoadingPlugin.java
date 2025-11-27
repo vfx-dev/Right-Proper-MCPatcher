@@ -22,6 +22,8 @@
 
 package com.falsepattern.mcpatcher.internal.asm;
 
+import com.falsepattern.mcpatcher.Tags;
+import com.falsepattern.mcpatcher.internal.config.MixinConfig;
 import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 import com.gtnewhorizon.gtnhmixins.builders.IMixins;
@@ -36,6 +38,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@IFMLLoadingPlugin.Name(Tags.MOD_NAME + "|ASM Plugin")
+@IFMLLoadingPlugin.MCVersion("1.7.10")
+@IFMLLoadingPlugin.SortingIndex(200_000)
+@IFMLLoadingPlugin.TransformerExclusions("com.falsepattern.mcpatcher.internal.asm")
 public final class CoreLoadingPlugin implements IFMLLoadingPlugin, IEarlyMixinLoader {
     @Language(value = "JAVA",
               prefix = "import ",
@@ -48,9 +54,11 @@ public final class CoreLoadingPlugin implements IFMLLoadingPlugin, IEarlyMixinLo
 
     @Override
     public String[] getASMTransformerClass() {
-        val mixinTweakClasses = GlobalProperties.<List<String>>get(MixinServiceLaunchWrapper.BLACKBOARD_KEY_TWEAKCLASSES);
-        if (mixinTweakClasses != null) {
-            mixinTweakClasses.add(TWEAKER);
+        if (MixinConfig.customItemTexturesMixins == MixinConfig.CITMixinStrength.Epic) {
+            val mixinTweakClasses = GlobalProperties.<List<String>>get(MixinServiceLaunchWrapper.BLACKBOARD_KEY_TWEAKCLASSES);
+            if (mixinTweakClasses != null) {
+                mixinTweakClasses.add(TWEAKER);
+            }
         }
         return new String[0];
     }
