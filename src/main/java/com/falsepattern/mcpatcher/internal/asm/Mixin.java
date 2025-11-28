@@ -63,6 +63,10 @@ public enum Mixin implements IMixins {
                                 () -> MCPatcherConfig.randomMobsMixins,
                                 require(TargetMod.DamageIndicators),
                                 client("mob.compat.damageindicators.DIGuiToolsMixin")),
+    RandomMobs_wdmla(Phase.LATE,
+                                () -> MCPatcherConfig.randomMobsMixins,
+                                require(TargetMod.wdmla),
+                                client("mob.compat.wdmla.RenderManagerMobEngineMixin")),
 
     BetterGlass(Phase.EARLY,
                 () -> MCPatcherConfig.betterGlass,
