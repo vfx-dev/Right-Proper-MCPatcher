@@ -32,4 +32,6 @@ public interface TrackedEntity {
     int mcp$initialZ();
 
     BiomeGenBase mcp$initialBiome();
+
+    int mcp$randomMobsSeed();
 }

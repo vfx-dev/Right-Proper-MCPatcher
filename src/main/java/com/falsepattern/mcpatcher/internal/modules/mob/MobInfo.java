@@ -158,7 +158,11 @@ public class MobInfo {
     }
 
     public ResourceLocation getTextureFor(TrackedEntity entity) {
-        val rand = getRandom(entity.mcp$initialX(), entity.mcp$initialY(), entity.mcp$initialZ());
+        // Use a stable, server-driven seed derived from the entity's persistent UUID.
+        // This guarantees:
+        //  - Same mob and same variant across relogs, chunk reloads and server restarts.
+        //  - All players see the same skin for a given mob.
+        int rand = entity.mcp$randomMobsSeed();
         int index;
         if (weights == null) {
             index = rand % textures.length;
