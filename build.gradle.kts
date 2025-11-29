@@ -60,6 +60,7 @@ tasks.processResources {
 
 repositories {
     exclusive(mavenpattern(), "com.falsepattern")
+    exclusive(horizon(), "com.github.GTNewHorizons")
     modrinthEX()
     cursemavenEX()
 }
@@ -69,4 +70,7 @@ dependencies {
     compileOnly("it.unimi.dsi:fastutil:8.5.16")
     compileOnly("maven.modrinth:etfuturum:2.6.2:dev")
     compileOnly(deobfCurse("damage-indicators-mod-59489:2692129"))
+    compileOnly("com.github.GTNewHorizons:WDMla:2.7.4:dev") {
+        excludeDeps()
+    }
 }

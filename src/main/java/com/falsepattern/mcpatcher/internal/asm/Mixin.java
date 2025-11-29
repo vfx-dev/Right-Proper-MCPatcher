@@ -65,6 +65,10 @@ public enum Mixin implements IMixins {
                                 () -> MixinConfig.randomMobsMixins,
                                 require(TargetMod.DamageIndicators),
                                 client("mob.compat.damageindicators.DIGuiToolsMixin")),
+    RandomMobs_WhatDreamMasterLooksAt(Phase.LATE,
+                                      () -> MixinConfig.randomMobsMixins,
+                                      require(TargetMod.WhatDreamMasterLooksAt),
+                                      client("mob.compat.wdmla.GuiDrawMixin")),
 
     BetterGlass(Phase.EARLY,
                 () -> MixinConfig.betterGlassMixins,
