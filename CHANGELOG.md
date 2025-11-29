@@ -19,9 +19,9 @@
 
 ### Fixed
 
-- Incorrectly mapped CTM Sides ([#7](https://github.com/owner/name/issues/7))
-- Random Mob property aliasing ([#8](https://github.com/owner/name/issues/8))
-- Handling of Random Mob legacy min/max height values ([#6](https://github.com/owner/name/issues/6))
+- Incorrectly mapped CTM Sides ([#7](https://github.com/vfx-dev/Right-Proper-MCPatcher/issues/7))
+- Random Mob property aliasing ([#8](https://github.com/vfx-dev/Right-Proper-MCPatcher/issues/8))
+- Handling of Random Mob legacy min/max height values ([#6](https://github.com/vfx-dev/Right-Proper-MCPatcher/issues/6))
 
 ## [0.1.2] - 2025-09-25
 
