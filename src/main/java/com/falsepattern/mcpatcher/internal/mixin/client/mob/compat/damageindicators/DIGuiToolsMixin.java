@@ -23,36 +23,39 @@
 package com.falsepattern.mcpatcher.internal.mixin.client.mob.compat.damageindicators;
 
 import DamageIndicatorsMod.gui.DIGuiTools;
+import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.falsepattern.mcpatcher.internal.modules.mob.MobEngine;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiIngame;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.entity.Entity;
 
-@Mixin(DIGuiTools.class)
-public abstract class DIGuiToolsMixin extends GuiIngame {
-    public DIGuiToolsMixin(Minecraft p_i1036_1_) {
-        super(p_i1036_1_);
-    }
-
-    @Inject(method = "renderEntity",
-            at = @At("HEAD"),
-            remap = false,
-            require = 1)
-    private static void preRenderEntity(EntityLivingBase el, CallbackInfo ci) {
-        MobEngine.pushRenderingEntities();
-        MobEngine.nextEntity(el);
-    }
-
-    @Inject(method = "renderEntity",
-            at = @At("RETURN"),
-            remap = false,
-            require = 1)
-    private static void postRenderEntity(EntityLivingBase el, CallbackInfo ci) {
-        MobEngine.popRenderingEntities();
+@Mixin(value = DIGuiTools.class,
+       remap = false)
+public abstract class DIGuiToolsMixin {
+    @WrapOperation(method = "renderEntity",
+                   at = @At(value = "INVOKE",
+                            target = "Lnet/minecraft/client/renderer/entity/Render;doRender(Lnet/minecraft/entity/Entity;DDDFF)V",
+                            remap = true),
+                   require = 1)
+    private static void mob_wrapEntity(Render instance,
+                                       Entity entity,
+                                       double x,
+                                       double y,
+                                       double z,
+                                       float entityYaw,
+                                       float partialTicks,
+                                       Operation<Void> original) {
+        if (ModuleConfig.randomMobs) {
+            MobEngine.pushRenderingEntities();
+            MobEngine.nextEntity(entity);
+            original.call(instance, entity, x, y, z, entityYaw, partialTicks);
+            MobEngine.popRenderingEntities();
+        } else {
+            original.call(instance, entity, x, y, z, entityYaw, partialTicks);
+        }
     }
 }
