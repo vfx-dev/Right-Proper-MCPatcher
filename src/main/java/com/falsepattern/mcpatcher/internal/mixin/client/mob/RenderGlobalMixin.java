@@ -43,7 +43,7 @@ public abstract class RenderGlobalMixin {
             require = 1)
     private void mob_beginEntities(CallbackInfo ci) {
         if (ModuleConfig.randomMobs) {
-            MobEngine.beginEntities();
+            MobEngine.pushRenderingEntities();
         }
     }
 
@@ -65,7 +65,7 @@ public abstract class RenderGlobalMixin {
             require = 1)
     private void mob_endEntities(CallbackInfo ci) {
         if (ModuleConfig.randomMobs) {
-            MobEngine.endEntities();
+            MobEngine.popRenderingEntities();
         }
     }
 }

@@ -44,7 +44,7 @@ public abstract class DIGuiToolsMixin extends GuiIngame {
             remap = false,
             require = 1)
     private static void preRenderEntity(EntityLivingBase el, CallbackInfo ci) {
-        MobEngine.beginEntities();
+        MobEngine.pushRenderingEntities();
         MobEngine.nextEntity(el);
     }
 
@@ -53,6 +53,6 @@ public abstract class DIGuiToolsMixin extends GuiIngame {
             remap = false,
             require = 1)
     private static void postRenderEntity(EntityLivingBase el, CallbackInfo ci) {
-        MobEngine.endEntities();
+        MobEngine.popRenderingEntities();
     }
 }
