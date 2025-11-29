@@ -59,6 +59,7 @@ public enum Mixin implements IMixins {
                () -> MixinConfig.randomMobsMixins,
                client("mob.EntityMixin",
                       "mob.RenderGlobalMixin",
+                      "mob.GuiInventoryMixin",
                       "mob.TextureManagerMixin")),
     RandomMobs_DamageIndicators(Phase.LATE,
                                 () -> MixinConfig.randomMobsMixins,
