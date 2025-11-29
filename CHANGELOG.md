@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.1] - 2025-11-29
+
+### Fixed
+
+- Late Mixins not loading, which was breaking Damage Indicators and WDMla compat
+
 ## [0.2.0] - 2025-11-29
 
 ### Changed
