@@ -22,7 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.modules.cit;
 
-import com.falsepattern.mcpatcher.internal.mixin.client.cit.enchant.RendererLivingEntityMixin;
+import com.falsepattern.mcpatcher.internal.mixin.mixins.client.cit.enchant.RendererLivingEntityMixin;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.renderer.entity.RenderBiped;

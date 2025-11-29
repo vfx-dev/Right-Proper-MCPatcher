@@ -25,6 +25,7 @@ package com.falsepattern.mcpatcher.internal.asm;
 import com.falsepattern.mcpatcher.Tags;
 import com.falsepattern.mcpatcher.internal.config.MixinConfig;
 import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
+import com.falsepattern.mcpatcher.internal.mixin.Mixin;
 import com.gtnewhorizon.gtnhmixins.IEarlyMixinLoader;
 import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 import lombok.val;

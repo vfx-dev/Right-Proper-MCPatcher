@@ -17,7 +17,7 @@ minecraft_fp {
     }
 
     mixin {
-        pkg = "internal.mixin"
+        pkg = "internal.mixin.mixins"
     }
 
     tokens {
