@@ -1,23 +1,26 @@
-config.mcpatcher.00_modules=功能模块
-config.mcpatcher.00_modules.tooltip=模块热开关
-config.mcpatcher.00_modules.connectedTextures=连接纹理
-config.mcpatcher.00_modules.connectedTextures.tooltip=连接纹理的热开关\n需要启用 连接纹理 Mixins
-config.mcpatcher.00_modules.betterGlass=更好的玻璃
-config.mcpatcher.00_modules.betterGlass.tooltip=允许普通玻璃块、玻璃板和信标玻璃具备半透明纹理\n需要启用 更好的玻璃 Mixins
-config.mcpatcher.00_modules.customItemTextures=自定义物品材质
-config.mcpatcher.00_modules.customItemTextures.tooltip=随机生物功能的热开关\n需要启用 随机生物 Mixins
-config.mcpatcher.00_modules.randomMobs=随机生物
-config.mcpatcher.00_modules.randomMobs.tooltip=自定义物品材质功能的热开关\n需要启用 自定义物品材质 Mixins
+# Configs
+# Notice for translators: <config key>.tooltip allows you to localize the tooltip for the hover text even if it's not present in this file
 
-config.mcpatcher.01_mixins=Mixins
-config.mcpatcher.01_mixins.tooltip=模块热开关
-config.mcpatcher.01_mixins.resourcePackOverlayMixins=资源包叠加 Mixins
-config.mcpatcher.01_mixins.resourcePackOverlayMixins.tooltip=资源包叠加层系统，当前用于实现 ctm_compact 支持\n若遇到纹理加载异常问题，请禁用此选项
-config.mcpatcher.01_mixins.connectedTexturesMixins=连接纹理 Mixins
-config.mcpatcher.01_mixins.connectedTexturesMixins.tooltip=若不希望加载连接纹理 mixins 功能，请禁用此选项\n需要开启此项，连接纹理功能才能生效
-config.mcpatcher.01_mixins.betterGlassMixins=更好的玻璃 Mixins
-config.mcpatcher.01_mixins.betterGlassMixins.tooltip=若不希望加载更好的玻璃 mixins 功能，请禁用此选项\n需要开启此项，更好的玻璃功能才能生效
-config.mcpatcher.01_mixins.customItemTexturesMixins=自定义物品材质 Mixins
-config.mcpatcher.01_mixins.customItemTexturesMixins.tooltip=若不希望加载自定义物品材质 mixins 功能，请设为禁用：\n - 弱模式：部分混入失败时仍继续加载\n - 常规模式：混入失败时将导致游戏崩溃\n - 增强模式：使用 ASM 重命名特定方法\n需要开启此项，自定义物品材质功能才能生效
-config.mcpatcher.01_mixins.randomMobsMixins=随机生物 Mixins
-config.mcpatcher.01_mixins.randomMobsMixins.tooltip=若不希望加载随机生物 mixins 功能，请禁用此选项\n需要开启此项，随机生物功能才能生效
+config.mcpatcher.00_modules=功能模块
+config.mcpatcher.00_modules.tooltip=运行时模块开关
+config.mcpatcher.00_modules.connectedTextures=连接纹理
+config.mcpatcher.00_modules.connectedTextures.tooltip=连接纹理的运行时开关。\n需启用连接纹理驱动模块才有效。
+config.mcpatcher.00_modules.betterGlass=玻璃透明渲染优化
+config.mcpatcher.00_modules.betterGlass.tooltip=允许普通玻璃块、玻璃板及信标玻璃具有半透明纹理。\n需启用玻璃透明渲染优化驱动模块才有效。
+config.mcpatcher.00_modules.customItemTextures=自定义物品纹理
+config.mcpatcher.00_modules.customItemTextures.tooltip=自定义物品纹理的运行时开关。\n需启用自定义物品纹理驱动模块才有效。
+config.mcpatcher.00_modules.randomMobs=随机实体
+config.mcpatcher.00_modules.randomMobs.tooltip=随机实体的运行时开关。\n需启用随机实体驱动模块才有效。
+
+config.mcpatcher.01_mixins=驱动模块
+config.mcpatcher.01_mixins.tooltip=运行时模块开关
+config.mcpatcher.01_mixins.resourcePackOverlayMixins=覆盖纹理驱动模块
+config.mcpatcher.01_mixins.resourcePackOverlayMixins.tooltip=覆盖纹理系统，当前用于实现ctm_compact支持。\n若出现纹理加载异常可禁用此选项。
+config.mcpatcher.01_mixins.connectedTexturesMixins=连接纹理驱动模块
+config.mcpatcher.01_mixins.connectedTexturesMixins.tooltip=若不希望加载连接纹理相关驱动模块则禁用此项。\n此功能为连接纹理所必需。
+config.mcpatcher.01_mixins.betterGlassMixins=玻璃透明渲染优化驱动模块
+config.mcpatcher.01_mixins.betterGlassMixins.tooltip=若不希望加载玻璃优化相关驱动模块则禁用此项。\n此功能为玻璃透明渲染优化所必需。
+config.mcpatcher.01_mixins.customItemTexturesMixins=自定义物品纹理驱动模块
+config.mcpatcher.01_mixins.customItemTexturesMixins.tooltip=若不希望加载自定义物品纹理相关驱动模块则设为禁用。\n - 弱兼容模式：部分驱动模块加载失败时仍继续运行\n - 常规模式：加载失败时游戏将崩溃\n - 增强模式：使用ASM重命名特定方法\n此功能为自定义物品纹理所必需。
+config.mcpatcher.01_mixins.randomMobsMixins=随机实体驱动模块
+config.mcpatcher.01_mixins.randomMobsMixins.tooltip=若不希望加载随机实体相关驱动模块则禁用此项。\n此功能为随机实体所必需。
