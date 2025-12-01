@@ -219,10 +219,8 @@ public class CommonParser {
         val list = new ObjectArrayList<BiomeGenBase>();
 
         for (val biomeName : biomeNames) {
-            val biome = findBiome(biomeName);
-            if (biome == null) {
-                LOG.warn("Biome not found: {}", biomeName);
-            } else {
+            val biome = parseBiome(biomeName);
+            if (biome != null) {
                 list.add(biome);
             }
         }
@@ -230,22 +228,19 @@ public class CommonParser {
         return list;
     }
 
-    public static @Nullable BiomeGenBase findBiome(@NotNull String biomeName) {
-        biomeName = biomeName.toLowerCase();
-        val biomeList = BiomeGenBase.getBiomeGenArray();
-
-        for (val biome : biomeList) {
-            if (biome == null) {
-                continue;
-            }
-            val name = biome.biomeName.replace(" ", "")
-                                      .toLowerCase();
-            if (name.equals(biomeName)) {
-                return biome;
+    public static @Nullable BiomeGenBase parseBiome(@NotNull String str) {
+        var biome = BiomeHelper.biomeFromName(str.toLowerCase());
+        if (biome == null) {
+            try {
+                biome = BiomeHelper.biomeFromId(Integer.parseInt(str));
+            } catch (RuntimeException ignored) {
             }
         }
-
-        return null;
+        if (biome == null) {
+            // TODO: Log spam on the "early" resourcepack init?
+            LOG.warn("Biome not found: {}", str);
+        }
+        return biome;
     }
 
     @RequiredArgsConstructor

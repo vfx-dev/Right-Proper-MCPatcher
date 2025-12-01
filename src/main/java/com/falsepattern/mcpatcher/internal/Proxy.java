@@ -25,9 +25,11 @@ package com.falsepattern.mcpatcher.internal;
 import com.falsepattern.mcpatcher.Tags;
 import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.falsepattern.mcpatcher.internal.modules.cit.CITEngine;
+import com.falsepattern.mcpatcher.internal.modules.common.BiomeHelper;
 import com.falsepattern.mcpatcher.internal.modules.mob.MobEngine;
 import lombok.val;
 import lombok.var;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
@@ -38,7 +40,9 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class Proxy {
+    @MustBeInvokedByOverriders
     public void postInit(FMLPostInitializationEvent event) {
+        BiomeHelper.mapBiomes();
     }
 
     public static class Server extends Proxy {
@@ -52,6 +56,8 @@ public class Proxy {
 
         @Override
         public void postInit(FMLPostInitializationEvent event) {
+            super.postInit(event);
+
             val mc = Minecraft.getMinecraft();
             val resMan = (IReloadableResourceManager) mc.getResourceManager();
             resMan.registerReloadListener(this::reloadResources);
