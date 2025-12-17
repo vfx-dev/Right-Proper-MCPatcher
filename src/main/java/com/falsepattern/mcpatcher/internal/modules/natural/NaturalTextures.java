@@ -67,6 +67,25 @@ public class NaturalTextures {
             vertexUs[2] = vertexUs[3];
             vertexUs[3] = swap;
         }
+
+        rotationAngle %= 2 * Math.PI;
+
+        double rotSin = MathHelper.sin((float) rotationAngle);
+        double rotCos = MathHelper.cos((float) rotationAngle);
+
+        float centerU = texture.getInterpolatedU(8D);
+        float centerV = texture.getInterpolatedV(8D);
+
+        // Rotate
+        for(int i = 0; i < 4; i++) {
+            // TODO calculate aspect ratio of the entire TextureAtlas and compensate for stretching
+            double deltaU = (vertexUs[i] - centerU) * 2D;
+            double deltaV = (vertexVs[i] - centerV) / 2D;
+
+            vertexUs[i] = (rotCos * deltaU) + (rotSin * deltaV) + centerU;
+            vertexVs[i] = (rotCos * deltaV) - (rotSin * deltaU) + centerV;
+        }
+
     }
 
 }
