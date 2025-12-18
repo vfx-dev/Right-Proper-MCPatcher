@@ -52,7 +52,31 @@ public class NaturalTextures {
     public static void applyNaturalTexture(Block block, double x, double y, double z, ForgeDirection side, IIcon texture,
                                            double[] vertexUs, double[] vertexVs) {
         // TODO filter for valid textures, select a random variation based on the xyz coords (+ maybe seed)
-        remapQuadUVs(vertexUs, vertexVs, Math.PI, false, texture);
+
+        int mod = (int) x % 4;
+
+        double rotation = 0;
+        switch (mod) {
+            case 0:
+                rotation = 0;
+                break;
+
+            case 1:
+            case -1:
+                rotation = Math.PI * 0.5D;
+                break;
+
+            case 2:
+            case -2:
+                rotation = Math.PI;
+                break;
+
+            case 3:
+            case -3:
+                rotation = Math.PI * 1.5D;
+                break;
+        }
+        remapQuadUVs(vertexUs, vertexVs, rotation, false, texture);
     }
 
     private static void remapQuadUVs(double[] vertexUs, double[] vertexVs, double rotationAngle, boolean mirrorHorizontal, IIcon texture) {
@@ -70,17 +94,25 @@ public class NaturalTextures {
 
         rotationAngle %= 2 * Math.PI;
 
-        double rotSin = MathHelper.sin((float) rotationAngle);
-        double rotCos = MathHelper.cos((float) rotationAngle);
+        float lengthU = texture.getMaxU() - texture.getMinU();
+        float lengthV = texture.getMaxV() - texture.getMinV();
 
-        float centerU = texture.getInterpolatedU(8D);
-        float centerV = texture.getInterpolatedV(8D);
+        float centerU = texture.getMinU() + lengthU / 2F;
+        float centerV = texture.getMinV() + lengthV / 2F;
+
+        float atlasAspectRatio = lengthU / lengthV;
+
+        float rotSin = MathHelper.sin((float) rotationAngle);
+        float rotCos = MathHelper.cos((float) rotationAngle);
+
+        // TODO check these methods for simplification / correctness on skewed angles (just extra)
+        float aspectU = Math.abs(rotSin * ((1F / atlasAspectRatio) - 1)) + 1;
+        float aspectV = Math.abs(rotCos * (1 - atlasAspectRatio)) + atlasAspectRatio;
 
         // Rotate
         for(int i = 0; i < 4; i++) {
-            // TODO calculate aspect ratio of the entire TextureAtlas and compensate for stretching
-            double deltaU = (vertexUs[i] - centerU) * 2D;
-            double deltaV = (vertexVs[i] - centerV) / 2D;
+            double deltaU = (vertexUs[i] - centerU) * aspectU;
+            double deltaV = (vertexVs[i] - centerV) * aspectV;
 
             vertexUs[i] = (rotCos * deltaU) + (rotSin * deltaV) + centerU;
             vertexVs[i] = (rotCos * deltaV) - (rotSin * deltaU) + centerV;
