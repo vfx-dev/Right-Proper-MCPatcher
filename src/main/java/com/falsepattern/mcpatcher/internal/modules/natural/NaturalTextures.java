@@ -32,9 +32,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class NaturalTextures {
 
     /**
-     * Apply UV overrides to a quad's texture, based on whether  the texture is
-     * in the list of Natural Textures, it's XYZ coordinates and the block's side.
-     * This method mutates the two arrays passed to it.
+     * Attempts to apply UV overrides to a quad's texture, based on certain criteria.
+     * This method mutates the two arrays passed into it.
      * @param block The block this texture applies to
      * @param x The X coordinate of the block
      * @param y The Y coordinate of the block
@@ -51,7 +50,9 @@ public class NaturalTextures {
      */
     public static void applyNaturalTexture(Block block, double x, double y, double z, ForgeDirection side, IIcon texture,
                                            double[] vertexUs, double[] vertexVs) {
+        if(!ModuleConfig.naturalTextures) return;
         // TODO filter for valid textures, select a random variation based on the xyz coords (+ maybe seed)
+
 
         int mod = (int) x % 4;
 
@@ -76,22 +77,51 @@ public class NaturalTextures {
                 rotation = Math.PI * 1.5D;
                 break;
         }
-        remapQuadUVs(vertexUs, vertexVs, rotation, false, texture);
+
+        remapQuadUVs(rotation, texture, vertexUs, vertexVs);
+
+        // TODO decide if mirror
+        if(false) {
+            mirrorQuadUVs(vertexUs);
+        }
     }
 
-    private static void remapQuadUVs(double[] vertexUs, double[] vertexVs, double rotationAngle, boolean mirrorHorizontal, IIcon texture) {
-        if(!ModuleConfig.naturalTextures) return;
+    /**
+     * Mirror the texture's U or V axis by swizzling the array's coordinates.
+     * This method mutates the array passed into it.
+     * @param vertexCoords An array of size 4, containing either the U or V coordinates of each quad vertex
+     * The array values should adhere to the following order, relative to the texture file:
+     * - Top Left
+     * - Top Right
+     * - Bottom Right
+     * - Bottom Left
+     */
+    private static void mirrorQuadUVs(double[] vertexCoords) {
+        double swap = vertexCoords[0];
+        vertexCoords[0] = vertexCoords[1];
+        vertexCoords[1] = swap;
 
-        if(mirrorHorizontal) {
-            double swap = vertexUs[0];
-            vertexUs[0] = vertexUs[1];
-            vertexUs[1] = swap;
+        swap = vertexCoords[2];
+        vertexCoords[2] = vertexCoords[3];
+        vertexCoords[3] = swap;
+    }
 
-            swap = vertexUs[2];
-            vertexUs[2] = vertexUs[3];
-            vertexUs[3] = swap;
-        }
-
+    /**
+     * Rotates a quad textures clockwise by an amount in radians. This method is not intended to be used for rotating at angles
+     * other than 0, 90, 180 or 270 degrees, and such rotations will result in skewed UVs and in textures from
+     * other appearing on the corners of this quad when viewed in-game.
+     * This method mutates the two arrays passed into it.
+     * @param rotationAngle The angle, in radians, to rotate the UVs by.
+     * @param texture The IIcon texture to use when calculating the rotation
+     * @param vertexUs An array of size 4, containing the U coordinates of each quad vertex
+     * @param vertexVs An array of size 4, containing the V coordinates of each quad vertex
+     * For both arrays, the values adhere to the following order, relative to the texture file:
+     * - Top Left
+     * - Top Right
+     * - Bottom Right
+     * - Bottom Left
+     */
+    private static void remapQuadUVs(double rotationAngle, IIcon texture, double[] vertexUs, double[] vertexVs) {
         rotationAngle %= 2 * Math.PI;
 
         float lengthU = texture.getMaxU() - texture.getMinU();
