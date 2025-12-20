@@ -29,7 +29,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class NaturalTextures {
+public class NaturalTexturesEngine {
 
     /**
      * Attempts to apply UV overrides to a quad's texture, based on certain criteria.

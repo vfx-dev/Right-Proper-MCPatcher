@@ -23,7 +23,7 @@
 package com.falsepattern.mcpatcher.internal.mixin.mixins.client.natural;
 
 import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
-import com.falsepattern.mcpatcher.internal.modules.natural.NaturalTextures;
+import com.falsepattern.mcpatcher.internal.modules.natural.NaturalTexturesEngine;
 import com.llamalad7.mixinextras.sugar.Local;
 import org.spongepowered.asm.lib.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,28 +42,28 @@ import net.minecraftforge.common.util.ForgeDirection;
 public abstract class RenderBlocksMixin {
 
     @Unique
-    private double[] vertexUs = new double[4];
+    private double[] mcp$vertexUs = new double[4];
 
     @Unique
-    private double[] vertexVs = new double[4];
+    private double[] mcp$vertexVs = new double[4];
 
     @Unique
-    private void mcpatcher$captureVertexes(Block block, double x, double y, double z, ForgeDirection side, IIcon texture,
-                                           double uA, double vA, double uB, double vB,
-                                           double uC, double vC, double uD, double vD) {
-        vertexUs[0] = uA;
-        vertexVs[0] = vA;
+    private void mcp$captureVertexes(Block block, double x, double y, double z, ForgeDirection side, IIcon texture,
+                                     double uA, double vA, double uB, double vB,
+                                     double uC, double vC, double uD, double vD) {
+        mcp$vertexUs[0] = uA;
+        mcp$vertexVs[0] = vA;
 
-        vertexUs[1] = uB;
-        vertexVs[1] = vB;
+        mcp$vertexUs[1] = uB;
+        mcp$vertexVs[1] = vB;
 
-        vertexUs[2] = uC;
-        vertexVs[2] = vC;
+        mcp$vertexUs[2] = uC;
+        mcp$vertexVs[2] = vC;
 
-        vertexUs[3] = uD;
-        vertexVs[3] = vD;
+        mcp$vertexUs[3] = uD;
+        mcp$vertexVs[3] = vD;
 
-        NaturalTextures.applyNaturalTexture(block, x, y, z, side, texture, vertexUs, vertexVs);
+        NaturalTexturesEngine.applyNaturalTexture(block, x, y, z, side, texture, mcp$vertexUs, mcp$vertexVs);
     }
 
     /** UV Capturing Mixins */
@@ -79,15 +79,15 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
         if(!ModuleConfig.naturalTextures) return;
-        mcpatcher$captureVertexes(block, x, y, z, ForgeDirection.DOWN, texture, d8, d10, d4, d6, d7, d9, d3, d5);
+        mcp$captureVertexes(block, x, y, z, ForgeDirection.DOWN, texture, d8, d10, d4, d6, d7, d9, d3, d5);
 
-        double swap = vertexUs[0];
-        vertexUs[0] = vertexUs[3];
-        vertexUs[3] = swap;
+        double swap = mcp$vertexUs[0];
+        mcp$vertexUs[0] = mcp$vertexUs[3];
+        mcp$vertexUs[3] = swap;
 
-        swap = vertexVs[0];
-        vertexVs[0] = vertexVs[3];
-        vertexVs[3] = swap;
+        swap = mcp$vertexVs[0];
+        mcp$vertexVs[0] = mcp$vertexVs[3];
+        mcp$vertexVs[3] = swap;
     }
 
     // Up
@@ -101,15 +101,15 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
         if(!ModuleConfig.naturalTextures) return;
-        mcpatcher$captureVertexes(block, x, y, z, ForgeDirection.UP, texture, d4, d6, d3, d5, d7, d9, d8, d10);
+        mcp$captureVertexes(block, x, y, z, ForgeDirection.UP, texture, d4, d6, d3, d5, d7, d9, d8, d10);
 
-        double swap = vertexUs[0];
-        vertexUs[0] = vertexUs[1];
-        vertexUs[1] = swap;
+        double swap = mcp$vertexUs[0];
+        mcp$vertexUs[0] = mcp$vertexUs[1];
+        mcp$vertexUs[1] = swap;
 
-        swap = vertexVs[0];
-        vertexVs[0] = vertexVs[1];
-        vertexVs[1] = swap;
+        swap = mcp$vertexVs[0];
+        mcp$vertexVs[0] = mcp$vertexVs[1];
+        mcp$vertexVs[1] = swap;
     }
 
     // North
@@ -123,15 +123,15 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
         if(!ModuleConfig.naturalTextures) return;
-        mcpatcher$captureVertexes(block, x, y, z, ForgeDirection.NORTH, texture, d3, d5, d7, d9, d4, d6, d8, d10);
+        mcp$captureVertexes(block, x, y, z, ForgeDirection.NORTH, texture, d3, d5, d7, d9, d4, d6, d8, d10);
 
-        double swap = vertexUs[1];
-        vertexUs[1] = vertexUs[2];
-        vertexUs[2] = swap;
+        double swap = mcp$vertexUs[1];
+        mcp$vertexUs[1] = mcp$vertexUs[2];
+        mcp$vertexUs[2] = swap;
 
-        swap = vertexVs[1];
-        vertexVs[1] = vertexVs[2];
-        vertexVs[2] = swap;
+        swap = mcp$vertexVs[1];
+        mcp$vertexVs[1] = mcp$vertexVs[2];
+        mcp$vertexVs[2] = swap;
     }
 
     // South
@@ -145,15 +145,15 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
         if(!ModuleConfig.naturalTextures) return;
-        mcpatcher$captureVertexes(block, x, y, z, ForgeDirection.SOUTH, texture, d3, d5, d4, d6, d8, d10, d7, d9);
+        mcp$captureVertexes(block, x, y, z, ForgeDirection.SOUTH, texture, d3, d5, d4, d6, d8, d10, d7, d9);
 
-        double swap = vertexUs[2];
-        vertexUs[2] = vertexUs[3];
-        vertexUs[3] = swap;
+        double swap = mcp$vertexUs[2];
+        mcp$vertexUs[2] = mcp$vertexUs[3];
+        mcp$vertexUs[3] = swap;
 
-        swap = vertexVs[2];
-        vertexVs[2] = vertexVs[3];
-        vertexVs[3] = swap;
+        swap = mcp$vertexVs[2];
+        mcp$vertexVs[2] = mcp$vertexVs[3];
+        mcp$vertexVs[3] = swap;
     }
 
     // West
@@ -167,15 +167,15 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
         if(!ModuleConfig.naturalTextures) return;
-        mcpatcher$captureVertexes(block, x, y, z, ForgeDirection.WEST, texture, d3, d5, d7, d9, d4, d6, d8, d10);
+        mcp$captureVertexes(block, x, y, z, ForgeDirection.WEST, texture, d3, d5, d7, d9, d4, d6, d8, d10);
 
-        double swap = vertexUs[1];
-        vertexUs[1] = vertexUs[2];
-        vertexUs[2] = swap;
+        double swap = mcp$vertexUs[1];
+        mcp$vertexUs[1] = mcp$vertexUs[2];
+        mcp$vertexUs[2] = swap;
 
-        swap = vertexVs[1];
-        vertexVs[1] = vertexVs[2];
-        vertexVs[2] = swap;
+        swap = mcp$vertexVs[1];
+        mcp$vertexVs[1] = mcp$vertexVs[2];
+        mcp$vertexVs[2] = swap;
     }
 
     // East
@@ -189,15 +189,15 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
         if(!ModuleConfig.naturalTextures) return;
-        mcpatcher$captureVertexes(block, x, y, z, ForgeDirection.EAST, texture, d3, d5, d7, d9, d4, d6, d8, d10);
+        mcp$captureVertexes(block, x, y, z, ForgeDirection.EAST, texture, d3, d5, d7, d9, d4, d6, d8, d10);
 
-        double swap = vertexUs[1];
-        vertexUs[1] = vertexUs[2];
-        vertexUs[2] = swap;
+        double swap = mcp$vertexUs[1];
+        mcp$vertexUs[1] = mcp$vertexUs[2];
+        mcp$vertexUs[2] = swap;
 
-        swap = vertexVs[1];
-        vertexVs[1] = vertexVs[2];
-        vertexVs[2] = swap;
+        swap = mcp$vertexVs[1];
+        mcp$vertexVs[1] = mcp$vertexVs[2];
+        mcp$vertexVs[2] = swap;
     }
 
 
@@ -210,7 +210,7 @@ public abstract class RenderBlocksMixin {
                                           shift = At.Shift.AFTER,
                                           opcode = Opcodes.GETFIELD))
     private double overwriteUD3(double d3) {
-        return ModuleConfig.naturalTextures ? vertexUs[0] : d3;
+        return ModuleConfig.naturalTextures ? mcp$vertexUs[0] : d3;
     }
 
     @ModifyVariable(method = {"renderFaceXNeg", "renderFaceXPos",
@@ -221,7 +221,7 @@ public abstract class RenderBlocksMixin {
                                           shift = At.Shift.AFTER,
                                           opcode = Opcodes.GETFIELD))
     private double overwriteUD4(double d4) {
-        return ModuleConfig.naturalTextures ? vertexUs[1] : d4;
+        return ModuleConfig.naturalTextures ? mcp$vertexUs[1] : d4;
     }
 
     @ModifyVariable(method = {"renderFaceXNeg", "renderFaceXPos",
@@ -232,7 +232,7 @@ public abstract class RenderBlocksMixin {
                                           shift = At.Shift.AFTER,
                                           opcode = Opcodes.GETFIELD))
     private double overwriteVD5(double d5) {
-        return ModuleConfig.naturalTextures ? vertexVs[0] : d5;
+        return ModuleConfig.naturalTextures ? mcp$vertexVs[0] : d5;
     }
 
     @ModifyVariable(method = {"renderFaceXNeg", "renderFaceXPos",
@@ -243,7 +243,7 @@ public abstract class RenderBlocksMixin {
                                           shift = At.Shift.AFTER,
                                           opcode = Opcodes.GETFIELD))
     private double overwriteVD6(double d6) {
-        return ModuleConfig.naturalTextures ? vertexVs[1] : d6;
+        return ModuleConfig.naturalTextures ? mcp$vertexVs[1] : d6;
     }
 
     @ModifyVariable(method = {"renderFaceXNeg", "renderFaceXPos",
@@ -254,7 +254,7 @@ public abstract class RenderBlocksMixin {
                                           shift = At.Shift.AFTER,
                                           opcode = Opcodes.GETFIELD))
     private double overwriteUD7(double d7) {
-        return ModuleConfig.naturalTextures ? vertexUs[2] : d7;
+        return ModuleConfig.naturalTextures ? mcp$vertexUs[2] : d7;
     }
 
     @ModifyVariable(method = {"renderFaceXNeg", "renderFaceXPos",
@@ -265,7 +265,7 @@ public abstract class RenderBlocksMixin {
                                           shift = At.Shift.AFTER,
                                           opcode = Opcodes.GETFIELD))
     private double overwriteUD8(double d8) {
-        return ModuleConfig.naturalTextures ? vertexUs[3] : d8;
+        return ModuleConfig.naturalTextures ? mcp$vertexUs[3] : d8;
     }
 
     @ModifyVariable(method = {"renderFaceXNeg", "renderFaceXPos",
@@ -276,7 +276,7 @@ public abstract class RenderBlocksMixin {
                                           shift = At.Shift.AFTER,
                                           opcode = Opcodes.GETFIELD))
     private double overwriteVD9(double d9) {
-        return ModuleConfig.naturalTextures ? vertexVs[2] : d9;
+        return ModuleConfig.naturalTextures ? mcp$vertexVs[2] : d9;
     }
 
     @ModifyVariable(method = {"renderFaceXNeg", "renderFaceXPos",
@@ -287,6 +287,6 @@ public abstract class RenderBlocksMixin {
                                           shift = At.Shift.AFTER,
                                           opcode = Opcodes.GETFIELD))
     private double overwriteVD10(double d10) {
-        return ModuleConfig.naturalTextures ? vertexVs[3] : d10;
+        return ModuleConfig.naturalTextures ? mcp$vertexVs[3] : d10;
     }
 }
