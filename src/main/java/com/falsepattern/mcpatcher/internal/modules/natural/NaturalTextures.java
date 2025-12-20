@@ -100,14 +100,11 @@ public class NaturalTextures {
         float centerU = texture.getMinU() + lengthU / 2F;
         float centerV = texture.getMinV() + lengthV / 2F;
 
-        float atlasAspectRatio = lengthU / lengthV;
-
         float rotSin = MathHelper.sin((float) rotationAngle);
         float rotCos = MathHelper.cos((float) rotationAngle);
 
-        // TODO check these methods for simplification / correctness on skewed angles (just extra)
-        float aspectU = Math.abs(rotSin * ((1F / atlasAspectRatio) - 1)) + 1;
-        float aspectV = Math.abs(rotCos * (1 - atlasAspectRatio)) + atlasAspectRatio;
+        double aspectU = Math.abs(rotSin * ((lengthV / lengthU) - 1D)) + 1D;
+        double aspectV = 1F / aspectU;
 
         // Rotate
         for(int i = 0; i < 4; i++) {
