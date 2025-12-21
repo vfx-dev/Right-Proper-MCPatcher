@@ -57,7 +57,8 @@ public enum Mixin implements IMixins {
 
     NaturalTextures(Phase.EARLY,
                       () -> MixinConfig.naturalTexturesMixins,
-                      client("natural.RenderBlocksMixin")),
+                      client("natural.RenderBlocksMixin",
+                             "natural.TextureMapMixin")),
 
     RandomMobs(Phase.EARLY,
                () -> MixinConfig.randomMobsMixins,

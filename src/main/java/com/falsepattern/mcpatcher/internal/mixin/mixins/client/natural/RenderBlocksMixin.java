@@ -25,6 +25,7 @@ package com.falsepattern.mcpatcher.internal.mixin.mixins.client.natural;
 import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.falsepattern.mcpatcher.internal.modules.natural.NaturalTexturesEngine;
 import com.llamalad7.mixinextras.sugar.Local;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.lib.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -48,7 +49,7 @@ public abstract class RenderBlocksMixin {
     private double[] mcp$vertexVs = new double[4];
 
     @Unique
-    private void mcp$captureVertexes(Block block, double x, double y, double z, ForgeDirection side, IIcon texture,
+    private void mcp$captureVertexes(Block block, double x, double y, double z, ForgeDirection side, @Nullable IIcon texture,
                                      double uA, double vA, double uB, double vB,
                                      double uC, double vC, double uD, double vD) {
         mcp$vertexUs[0] = uA;
@@ -62,6 +63,8 @@ public abstract class RenderBlocksMixin {
 
         mcp$vertexUs[3] = uD;
         mcp$vertexVs[3] = vD;
+
+        if(texture == null) return;
 
         NaturalTexturesEngine.applyNaturalTexture(block, x, y, z, side, texture, mcp$vertexUs, mcp$vertexVs);
     }

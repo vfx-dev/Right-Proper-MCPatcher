@@ -22,14 +22,67 @@
 
 package com.falsepattern.mcpatcher.internal.modules.natural;
 
-import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
+import com.falsepattern.mcpatcher.Tags;
+import com.falsepattern.mcpatcher.internal.modules.common.ResourceScanner;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import lombok.val;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.io.IOException;
+import java.util.Properties;
+
 public class NaturalTexturesEngine {
+
+    static final Logger LOG = LogManager.getLogger(Tags.MOD_NAME + " NaturalTextures");
+
+    private static final Object2ObjectOpenHashMap<String, NaturalTexturesInfo> naturalTexturesInfo = new Object2ObjectOpenHashMap<>();
+
+    public static void updateIcons(TextureMap textureMap) {
+        LOG.debug("Reloading Natural Textures");
+
+        naturalTexturesInfo.clear();
+
+        try {
+            val resNatural = ResourceScanner.getResource(new ResourceLocation("minecraft:mcpatcher/natural.properties"));
+            if(resNatural == null) {
+                LOG.debug("No natural.properties file found");
+                return;
+            }
+            val props = new Properties();
+            props.load(resNatural.getInputStream());
+            parseNaturalTextures(props);
+
+            LOG.debug("Loaded custom natural.properties");
+
+        } catch (IOException ignored) {
+            LOG.debug("No natural.properties file found");
+        }
+    }
+
+    private static void parseNaturalTextures(Properties props) {
+        for (String name : props.stringPropertyNames()) {
+            String value = props.getProperty(name);
+            name = name.trim();
+            if (name.startsWith("minecraft:")) {
+               name = name.substring(10);
+            }
+            if(naturalTexturesInfo.containsKey(name)) {
+                LOG.warn("Duplicate entry for found in natural.properties: [entry={}]", name);
+                continue;
+            }
+
+            naturalTexturesInfo.put(name, new NaturalTexturesInfo(value));
+        }
+    }
 
     /**
      * Attempts to apply UV overrides to a quad's texture, based on certain criteria.
@@ -48,40 +101,30 @@ public class NaturalTexturesEngine {
      * - Bottom Right
      * - Bottom Left
      */
-    public static void applyNaturalTexture(Block block, double x, double y, double z, ForgeDirection side, IIcon texture,
+    public static void applyNaturalTexture(Block block, double x, double y, double z, @NotNull ForgeDirection side, @NotNull IIcon texture,
                                            double[] vertexUs, double[] vertexVs) {
-        if(!ModuleConfig.naturalTextures) return;
         // TODO filter for valid textures, select a random variation based on the xyz coords (+ maybe seed)
 
+        val texName = texture.getIconName();
+        if (!naturalTexturesInfo.containsKey(texName)) return;
 
-        int mod = (int) x % 4;
+        val texInfo = naturalTexturesInfo.get(texName);
 
-        double rotation = 0;
-        switch (mod) {
-            case 0:
-                rotation = 0;
+        switch (texInfo.rotation()) {
+            case Two:
+                rotateQuadUVs(Math.PI, texture, vertexUs, vertexVs);
                 break;
 
-            case 1:
-            case -1:
-                rotation = Math.PI * 0.5D;
+            case Four:
+                rotateQuadUVs(Math.PI / 2D, texture, vertexUs, vertexVs);
                 break;
 
-            case 2:
-            case -2:
-                rotation = Math.PI;
-                break;
-
-            case 3:
-            case -3:
-                rotation = Math.PI * 1.5D;
+            case None:
+            default:
                 break;
         }
 
-        remapQuadUVs(rotation, texture, vertexUs, vertexVs);
-
-        // TODO decide if mirror
-        if(false) {
+        if(texInfo.flipHorizontally()) {
             mirrorQuadUVs(vertexUs);
         }
     }
@@ -107,8 +150,8 @@ public class NaturalTexturesEngine {
     }
 
     /**
-     * Rotates a quad textures clockwise by an amount in radians. This method is not intended to be used for rotating at angles
-     * other than 0, 90, 180 or 270 degrees, and such rotations will result in skewed UVs and in textures from
+     * Rotates a quad's texture clockwise by an amount in radians. This method is not intended to be used for rotating
+     * at angles other than 0, 90, 180 or 270 degrees, and such rotations will result in skewed UVs and in textures from
      * other appearing on the corners of this quad when viewed in-game.
      * This method mutates the two arrays passed into it.
      * @param rotationAngle The angle, in radians, to rotate the UVs by.
@@ -121,8 +164,8 @@ public class NaturalTexturesEngine {
      * - Bottom Right
      * - Bottom Left
      */
-    private static void remapQuadUVs(double rotationAngle, IIcon texture, double[] vertexUs, double[] vertexVs) {
-        rotationAngle %= 2 * Math.PI;
+    private static void rotateQuadUVs(double rotationAngle, IIcon texture, double[] vertexUs, double[] vertexVs) {
+        rotationAngle %= 2D * Math.PI;
 
         float lengthU = texture.getMaxU() - texture.getMinU();
         float lengthV = texture.getMaxV() - texture.getMinV();
