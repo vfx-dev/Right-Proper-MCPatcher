@@ -23,9 +23,7 @@
 package com.falsepattern.mcpatcher.internal.modules.natural;
 
 import com.falsepattern.mcpatcher.Tags;
-import com.falsepattern.mcpatcher.internal.modules.common.ResourceScanner;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import lombok.val;
+import com.falsepattern.mcpatcher.internal.modules.common.MCPMath;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -34,54 +32,23 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import java.io.IOException;
-import java.util.Properties;
+import java.util.Map;
 
 public class NaturalTexturesEngine {
 
     static final Logger LOG = LogManager.getLogger(Tags.MOD_NAME + " NaturalTextures");
 
-    private static final Object2ObjectOpenHashMap<String, NaturalTexturesInfo> naturalTexturesInfo = new Object2ObjectOpenHashMap<>();
+    private static Map<String, NaturalTexturesInfo> naturalTexturesInfo = null;
 
     public static void updateIcons(TextureMap textureMap) {
         LOG.debug("Reloading Natural Textures");
 
-        naturalTexturesInfo.clear();
-
-        try {
-            val resNatural = ResourceScanner.getResource(new ResourceLocation("minecraft:mcpatcher/natural.properties"));
-            if(resNatural == null) {
-                LOG.debug("No natural.properties file found");
-                return;
-            }
-            val props = new Properties();
-            props.load(resNatural.getInputStream());
-            parseNaturalTextures(props);
-
-            LOG.debug("Loaded custom natural.properties");
-
-        } catch (IOException ignored) {
-            LOG.debug("No natural.properties file found");
-        }
-    }
-
-    private static void parseNaturalTextures(Properties props) {
-        for (String name : props.stringPropertyNames()) {
-            String value = props.getProperty(name);
-            name = name.trim();
-            if (name.startsWith("minecraft:")) {
-               name = name.substring(10);
-            }
-            if(naturalTexturesInfo.containsKey(name)) {
-                LOG.warn("Duplicate entry for found in natural.properties: [entry={}]", name);
-                continue;
-            }
-
-            naturalTexturesInfo.put(name, new NaturalTexturesInfo(value));
-        }
+        // Try reading from mcpatcher path first, fallback to optifine for backwards compatibility
+        naturalTexturesInfo = NaturalTexturesParser.parseFirstAvailableResource(
+                "minecraft:mcpatcher/natural.properties",
+                "minecraft:optifine/natural.properties");
     }
 
     /**
