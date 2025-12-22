@@ -101,30 +101,20 @@ public class NaturalTexturesEngine {
      * - Bottom Right
      * - Bottom Left
      */
-    public static void applyNaturalTexture(Block block, double x, double y, double z, @NotNull ForgeDirection side, @NotNull IIcon texture,
+    public static void applyNaturalTexture(Block block, int x, int y, int z, @NotNull ForgeDirection side, @NotNull IIcon texture,
                                            double[] vertexUs, double[] vertexVs) {
-        // TODO filter for valid textures, select a random variation based on the xyz coords (+ maybe seed)
+        // Ignore blocks rendered in inventory / player's hand
+        if (x == 0 && y == 0 && z == 0) return;
 
-        val texName = texture.getIconName();
+        String texName = texture.getIconName();
         if (!naturalTexturesInfo.containsKey(texName)) return;
+        NaturalTexturesInfo texInfo = naturalTexturesInfo.get(texName);
 
-        val texInfo = naturalTexturesInfo.get(texName);
+        int rand = getRandom(x, y, z, side, 0);
+        rotateQuadUVs(texInfo.getRadiansFromRandom(rand), texture, vertexUs, vertexVs);
 
-        switch (texInfo.rotation()) {
-            case Two:
-                rotateQuadUVs(Math.PI, texture, vertexUs, vertexVs);
-                break;
-
-            case Four:
-                rotateQuadUVs(Math.PI / 2D, texture, vertexUs, vertexVs);
-                break;
-
-            case None:
-            default:
-                break;
-        }
-
-        if(texInfo.flipHorizontally()) {
+        int rand2 = getRandom(x, y, z, side, rand);
+        if(texInfo.getFlipFromRandom(rand2)) {
             mirrorQuadUVs(vertexUs);
         }
     }
@@ -165,6 +155,8 @@ public class NaturalTexturesEngine {
      * - Bottom Left
      */
     private static void rotateQuadUVs(double rotationAngle, IIcon texture, double[] vertexUs, double[] vertexVs) {
+        if(rotationAngle == 0D) return;
+
         rotationAngle %= 2D * Math.PI;
 
         float lengthU = texture.getMaxU() - texture.getMinU();
@@ -190,4 +182,12 @@ public class NaturalTexturesEngine {
 
     }
 
+    private static int getRandom(int x , int y, int z, @NotNull ForgeDirection side, int salt) {
+        int rand = MCPMath.intHash(side.ordinal() + 37);
+        rand = MCPMath.intHash(rand + x);
+        rand = MCPMath.intHash(rand + z);
+        rand = MCPMath.intHash(rand + y);
+        rand = MCPMath.intHash(rand + salt);
+        return rand & Integer.MAX_VALUE;
+    }
 }

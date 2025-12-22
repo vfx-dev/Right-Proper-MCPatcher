@@ -32,25 +32,20 @@ import static com.falsepattern.mcpatcher.internal.modules.natural.NaturalTexture
 @Accessors(fluent = true,
            chain = false)
 public class NaturalTexturesInfo {
-    private static final UVRotation DEFAULT_ROTATION = UVRotation.None;
-    private static final boolean DEFAULT_FLIP_HORIZONTALLY = false;
-
     public enum UVRotation {
         None,
-        Two, // 180 degrees rotations
-        Four, // 90 degrees rotations
+        Two, // 180 degrees rotations (total: 2)
+        Four, // 90 degrees rotations (total: 4)
     }
+
+    private static final UVRotation DEFAULT_ROTATION = UVRotation.None;
+    private static final boolean DEFAULT_FLIP_HORIZONTALLY = false;
 
     private final UVRotation rotation;
     private final boolean flipHorizontally;
 
-    public NaturalTexturesInfo() {
-        rotation = DEFAULT_ROTATION;
-        flipHorizontally = DEFAULT_FLIP_HORIZONTALLY;
-    }
-
     public NaturalTexturesInfo(@Nullable String propString) {
-        if(propString == null || propString.isEmpty()) {
+        if(propString == null) {
             rotation = DEFAULT_ROTATION;
             flipHorizontally = DEFAULT_FLIP_HORIZONTALLY;
             return;
@@ -96,6 +91,22 @@ public class NaturalTexturesInfo {
                 rotation = DEFAULT_ROTATION;
                 flipHorizontally = DEFAULT_FLIP_HORIZONTALLY;
                 break;
+        }
+    }
+
+    public final boolean getFlipFromRandom(int rand) {
+        return flipHorizontally && (rand & 1) == 0;
+    }
+
+    public final double getRadiansFromRandom(int rand) {
+        switch (rotation) {
+            case Two:
+                return (rand % 2) * Math.PI;
+            case Four:
+                return (rand % 4) * Math.PI / 2D;
+            case None:
+            default:
+                return 0D;
         }
     }
 }
