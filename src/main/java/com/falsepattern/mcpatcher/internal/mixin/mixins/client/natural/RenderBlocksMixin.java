@@ -43,10 +43,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 public abstract class RenderBlocksMixin {
 
     @Unique
-    private double[] mcp$vertexUs = new double[4];
+    private final double[] mcp$vertexUs = new double[4];
 
     @Unique
-    private double[] mcp$vertexVs = new double[4];
+    private final double[] mcp$vertexVs = new double[4];
 
     @Unique
     private void mcp$captureVertexes(Block block, int x, int y, int z, ForgeDirection side, @Nullable IIcon texture,
@@ -72,9 +72,8 @@ public abstract class RenderBlocksMixin {
     /** UV Capturing Mixins */
 
     // Down
-    @Inject(method = "renderFaceYNeg", at = @At(value = "FIELD",
+    @Inject(method = "renderFaceYNeg", require = 1, at = @At(value = "FIELD",
                                                 target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-                                                shift = At.Shift.BEFORE,
                                                 opcode = Opcodes.GETFIELD))
     private void swizzleVerticesYNeg(Block block, double x, double y, double z, IIcon texture, CallbackInfo ci,
                                    @Local(ordinal = 3) double d3, @Local(ordinal = 4) double d4, @Local(ordinal = 5) double d5,
@@ -94,9 +93,8 @@ public abstract class RenderBlocksMixin {
     }
 
     // Up
-    @Inject(method = "renderFaceYPos", at = @At(value = "FIELD",
+    @Inject(method = "renderFaceYPos", require = 1, at = @At(value = "FIELD",
                                                 target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-                                                shift = At.Shift.BEFORE,
                                                 opcode = Opcodes.GETFIELD))
     private void swizzleVerticesYPos(Block block, double x, double y, double z, IIcon texture, CallbackInfo ci,
                                    @Local(ordinal = 3) double d3, @Local(ordinal = 4) double d4, @Local(ordinal = 5) double d5,
@@ -116,9 +114,8 @@ public abstract class RenderBlocksMixin {
     }
 
     // North
-    @Inject(method = "renderFaceZNeg", at = @At(value = "FIELD",
+    @Inject(method = "renderFaceZNeg", require = 1, at = @At(value = "FIELD",
                                                 target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-                                                shift = At.Shift.BEFORE,
                                                 opcode = Opcodes.GETFIELD))
     private void swizzleVerticesZNeg(Block block, double x, double y, double z, IIcon texture, CallbackInfo ci,
                                    @Local(ordinal = 3) double d3, @Local(ordinal = 4) double d4, @Local(ordinal = 5) double d5,
@@ -138,9 +135,8 @@ public abstract class RenderBlocksMixin {
     }
 
     // South
-    @Inject(method = "renderFaceZPos", at = @At(value = "FIELD",
+    @Inject(method = "renderFaceZPos", require = 1, at = @At(value = "FIELD",
                                                 target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-                                                shift = At.Shift.BEFORE,
                                                 opcode = Opcodes.GETFIELD))
     private void swizzleVerticesZPos(Block block, double x, double y, double z, IIcon texture, CallbackInfo ci,
                                    @Local(ordinal = 3) double d3, @Local(ordinal = 4) double d4, @Local(ordinal = 5) double d5,
@@ -160,9 +156,8 @@ public abstract class RenderBlocksMixin {
     }
 
     // West
-    @Inject(method = "renderFaceXNeg", at = @At(value = "FIELD",
+    @Inject(method = "renderFaceXNeg", require = 1, at = @At(value = "FIELD",
                                                 target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-                                                shift = At.Shift.BEFORE,
                                                 opcode = Opcodes.GETFIELD))
     private void swizzleVerticesXNeg(Block block, double x, double y, double z, IIcon texture, CallbackInfo ci,
                                    @Local(ordinal = 3) double d3, @Local(ordinal = 4) double d4, @Local(ordinal = 5) double d5,
@@ -182,9 +177,8 @@ public abstract class RenderBlocksMixin {
     }
 
     // East
-    @Inject(method = "renderFaceXPos", at = @At(value = "FIELD",
+    @Inject(method = "renderFaceXPos", require = 1, at = @At(value = "FIELD",
                                                 target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-                                                shift = At.Shift.BEFORE,
                                                 opcode = Opcodes.GETFIELD))
     private void swizzleVerticesXPos(Block block, double x, double y, double z, IIcon texture, CallbackInfo ci,
                                    @Local(ordinal = 3) double d3, @Local(ordinal = 4) double d4, @Local(ordinal = 5) double d5,
@@ -203,15 +197,14 @@ public abstract class RenderBlocksMixin {
         mcp$vertexVs[2] = swap;
     }
 
-
     /** UV apply Mixins */
     @ModifyVariable(method = {"renderFaceXNeg", "renderFaceXPos",
                               "renderFaceYNeg", "renderFaceYPos",
                               "renderFaceZNeg", "renderFaceZPos"},
-                    ordinal = 3, at = @At(value = "FIELD",
+                    require = 6, ordinal = 3, at = @At(value = "FIELD",
                                           target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-                                          shift = At.Shift.AFTER,
-                                          opcode = Opcodes.GETFIELD))
+                                          opcode = Opcodes.GETFIELD,
+                                          shift = At.Shift.AFTER))
     private double overwriteUD3(double d3) {
         return ModuleConfig.naturalTextures ? mcp$vertexUs[0] : d3;
     }
@@ -219,10 +212,10 @@ public abstract class RenderBlocksMixin {
     @ModifyVariable(method = {"renderFaceXNeg", "renderFaceXPos",
                               "renderFaceYNeg", "renderFaceYPos",
                               "renderFaceZNeg", "renderFaceZPos"},
-                    ordinal = 4, at = @At(value = "FIELD",
+                    require = 6, ordinal = 4, at = @At(value = "FIELD",
                                           target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-                                          shift = At.Shift.AFTER,
-                                          opcode = Opcodes.GETFIELD))
+                                          opcode = Opcodes.GETFIELD,
+                                          shift = At.Shift.AFTER))
     private double overwriteUD4(double d4) {
         return ModuleConfig.naturalTextures ? mcp$vertexUs[1] : d4;
     }
@@ -230,10 +223,10 @@ public abstract class RenderBlocksMixin {
     @ModifyVariable(method = {"renderFaceXNeg", "renderFaceXPos",
                               "renderFaceYNeg", "renderFaceYPos",
                               "renderFaceZNeg", "renderFaceZPos"},
-                    ordinal = 5, at = @At(value = "FIELD",
+                    require = 6, ordinal = 5, at = @At(value = "FIELD",
                                           target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-                                          shift = At.Shift.AFTER,
-                                          opcode = Opcodes.GETFIELD))
+                                          opcode = Opcodes.GETFIELD,
+                                          shift = At.Shift.AFTER))
     private double overwriteVD5(double d5) {
         return ModuleConfig.naturalTextures ? mcp$vertexVs[0] : d5;
     }
@@ -241,10 +234,10 @@ public abstract class RenderBlocksMixin {
     @ModifyVariable(method = {"renderFaceXNeg", "renderFaceXPos",
                               "renderFaceYNeg", "renderFaceYPos",
                               "renderFaceZNeg", "renderFaceZPos"},
-                    ordinal = 6, at = @At(value = "FIELD",
+                    require = 6, ordinal = 6, at = @At(value = "FIELD",
                                           target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-                                          shift = At.Shift.AFTER,
-                                          opcode = Opcodes.GETFIELD))
+                                          opcode = Opcodes.GETFIELD,
+                                          shift = At.Shift.AFTER))
     private double overwriteVD6(double d6) {
         return ModuleConfig.naturalTextures ? mcp$vertexVs[1] : d6;
     }
@@ -252,10 +245,10 @@ public abstract class RenderBlocksMixin {
     @ModifyVariable(method = {"renderFaceXNeg", "renderFaceXPos",
                               "renderFaceYNeg", "renderFaceYPos",
                               "renderFaceZNeg", "renderFaceZPos"},
-                    ordinal = 7, at = @At(value = "FIELD",
+                    require = 6, ordinal = 7, at = @At(value = "FIELD",
                                           target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-                                          shift = At.Shift.AFTER,
-                                          opcode = Opcodes.GETFIELD))
+                                          opcode = Opcodes.GETFIELD,
+                                          shift = At.Shift.AFTER))
     private double overwriteUD7(double d7) {
         return ModuleConfig.naturalTextures ? mcp$vertexUs[2] : d7;
     }
@@ -263,10 +256,10 @@ public abstract class RenderBlocksMixin {
     @ModifyVariable(method = {"renderFaceXNeg", "renderFaceXPos",
                               "renderFaceYNeg", "renderFaceYPos",
                               "renderFaceZNeg", "renderFaceZPos"},
-                    ordinal = 8, at = @At(value = "FIELD",
+                    require = 6, ordinal = 8, at = @At(value = "FIELD",
                                           target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-                                          shift = At.Shift.AFTER,
-                                          opcode = Opcodes.GETFIELD))
+                                          opcode = Opcodes.GETFIELD,
+                                          shift = At.Shift.AFTER))
     private double overwriteUD8(double d8) {
         return ModuleConfig.naturalTextures ? mcp$vertexUs[3] : d8;
     }
@@ -274,10 +267,10 @@ public abstract class RenderBlocksMixin {
     @ModifyVariable(method = {"renderFaceXNeg", "renderFaceXPos",
                               "renderFaceYNeg", "renderFaceYPos",
                               "renderFaceZNeg", "renderFaceZPos"},
-                    ordinal = 9, at = @At(value = "FIELD",
+                    require = 6, ordinal = 9, at = @At(value = "FIELD",
                                           target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-                                          shift = At.Shift.AFTER,
-                                          opcode = Opcodes.GETFIELD))
+                                          opcode = Opcodes.GETFIELD,
+                                          shift = At.Shift.AFTER))
     private double overwriteVD9(double d9) {
         return ModuleConfig.naturalTextures ? mcp$vertexVs[2] : d9;
     }
@@ -285,10 +278,10 @@ public abstract class RenderBlocksMixin {
     @ModifyVariable(method = {"renderFaceXNeg", "renderFaceXPos",
                               "renderFaceYNeg", "renderFaceYPos",
                               "renderFaceZNeg", "renderFaceZPos"},
-                    ordinal = 10, at = @At(value = "FIELD",
+                    require = 6, ordinal = 10, at = @At(value = "FIELD",
                                           target = "Lnet/minecraft/client/renderer/RenderBlocks;enableAO:Z",
-                                          shift = At.Shift.AFTER,
-                                          opcode = Opcodes.GETFIELD))
+                                          opcode = Opcodes.GETFIELD,
+                                          shift = At.Shift.AFTER))
     private double overwriteVD10(double d10) {
         return ModuleConfig.naturalTextures ? mcp$vertexVs[3] : d10;
     }

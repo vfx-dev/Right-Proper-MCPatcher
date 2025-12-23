@@ -39,6 +39,6 @@ public class TextureMapMixin {
                      shift = At.Shift.AFTER),
             require = 1)
     private void updateIconsNaturalTextures(CallbackInfo ci) {
-        NaturalTexturesEngine.updateIcons((TextureMap) (Object) this);
+        NaturalTexturesEngine.reloadNaturalTextureResources();
     }
 }

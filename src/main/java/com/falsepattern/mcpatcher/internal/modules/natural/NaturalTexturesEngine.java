@@ -29,7 +29,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -42,7 +41,7 @@ public class NaturalTexturesEngine {
 
     private static Map<String, NaturalTexturesInfo> naturalTexturesInfo = null;
 
-    public static void updateIcons(TextureMap textureMap) {
+    public static void reloadNaturalTextureResources() {
         LOG.debug("Reloading Natural Textures");
 
         // Try reading from mcpatcher path first, fallback to optifine for backwards compatibility
