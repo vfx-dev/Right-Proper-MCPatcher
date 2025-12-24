@@ -103,6 +103,8 @@ public class NaturalTexturesParser {
         val match = entryLinePattern.matcher(line);
         if (match.matches()) {
             buildInfo(match.group(1), match.group(2), map);
+        } else {
+            LOG.warn("Skipping unparseable line in natural.properties: [line=\"{}\"]", line);
         }
     }
 
