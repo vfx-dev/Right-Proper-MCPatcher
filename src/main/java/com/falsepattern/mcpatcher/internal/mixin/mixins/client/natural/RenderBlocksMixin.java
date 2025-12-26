@@ -23,6 +23,7 @@
 package com.falsepattern.mcpatcher.internal.mixin.mixins.client.natural;
 
 import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
+import com.falsepattern.mcpatcher.internal.modules.common.Side;
 import com.falsepattern.mcpatcher.internal.modules.natural.NaturalTexturesEngine;
 import com.llamalad7.mixinextras.sugar.Local;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +38,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.util.IIcon;
-import net.minecraftforge.common.util.ForgeDirection;
 
 @Mixin(RenderBlocks.class)
 public abstract class RenderBlocksMixin {
@@ -49,7 +49,7 @@ public abstract class RenderBlocksMixin {
     private final double[] mcp$vertexVs = new double[4];
 
     @Unique
-    private void mcp$captureVertexes(Block block, int x, int y, int z, ForgeDirection side, @Nullable IIcon texture,
+    private void mcp$captureVertexes(Block block, int x, int y, int z, Side side, @Nullable IIcon texture,
                                      double uA, double vA, double uB, double vB,
                                      double uC, double vC, double uD, double vD) {
         mcp$vertexUs[0] = uA;
@@ -81,7 +81,7 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
         if(!ModuleConfig.naturalTextures) return;
-        mcp$captureVertexes(block, (int) x, (int) y, (int) z, ForgeDirection.DOWN, texture, d8, d10, d4, d6, d7, d9, d3, d5);
+        mcp$captureVertexes(block, (int) x, (int) y, (int) z, Side.YNeg, texture, d8, d10, d4, d6, d7, d9, d3, d5);
 
         double swap = mcp$vertexUs[0];
         mcp$vertexUs[0] = mcp$vertexUs[3];
@@ -102,7 +102,7 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
         if(!ModuleConfig.naturalTextures) return;
-        mcp$captureVertexes(block, (int) x, (int) y, (int) z, ForgeDirection.UP, texture, d4, d6, d3, d5, d7, d9, d8, d10);
+        mcp$captureVertexes(block, (int) x, (int) y, (int) z, Side.YPos, texture, d4, d6, d3, d5, d7, d9, d8, d10);
 
         double swap = mcp$vertexUs[0];
         mcp$vertexUs[0] = mcp$vertexUs[1];
@@ -123,7 +123,7 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
         if(!ModuleConfig.naturalTextures) return;
-        mcp$captureVertexes(block, (int) x, (int) y, (int) z, ForgeDirection.NORTH, texture, d3, d5, d7, d9, d4, d6, d8, d10);
+        mcp$captureVertexes(block, (int) x, (int) y, (int) z, Side.ZNeg, texture, d3, d5, d7, d9, d4, d6, d8, d10);
 
         double swap = mcp$vertexUs[1];
         mcp$vertexUs[1] = mcp$vertexUs[2];
@@ -144,7 +144,7 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
         if(!ModuleConfig.naturalTextures) return;
-        mcp$captureVertexes(block, (int) x, (int) y, (int) z, ForgeDirection.SOUTH, texture, d3, d5, d4, d6, d8, d10, d7, d9);
+        mcp$captureVertexes(block, (int) x, (int) y, (int) z, Side.ZPos, texture, d3, d5, d4, d6, d8, d10, d7, d9);
 
         double swap = mcp$vertexUs[2];
         mcp$vertexUs[2] = mcp$vertexUs[3];
@@ -165,7 +165,7 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
         if(!ModuleConfig.naturalTextures) return;
-        mcp$captureVertexes(block, (int) x, (int) y, (int) z, ForgeDirection.WEST, texture, d3, d5, d7, d9, d4, d6, d8, d10);
+        mcp$captureVertexes(block, (int) x, (int) y, (int) z, Side.XNeg, texture, d3, d5, d7, d9, d4, d6, d8, d10);
 
         double swap = mcp$vertexUs[1];
         mcp$vertexUs[1] = mcp$vertexUs[2];
@@ -186,7 +186,7 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
         if(!ModuleConfig.naturalTextures) return;
-        mcp$captureVertexes(block, (int) x, (int) y, (int) z, ForgeDirection.EAST, texture, d3, d5, d7, d9, d4, d6, d8, d10);
+        mcp$captureVertexes(block, (int) x, (int) y, (int) z, Side.XPos, texture, d3, d5, d7, d9, d4, d6, d8, d10);
 
         double swap = mcp$vertexUs[1];
         mcp$vertexUs[1] = mcp$vertexUs[2];

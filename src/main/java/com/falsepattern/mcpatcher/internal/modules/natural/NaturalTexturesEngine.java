@@ -24,6 +24,7 @@ package com.falsepattern.mcpatcher.internal.modules.natural;
 
 import com.falsepattern.mcpatcher.Tags;
 import com.falsepattern.mcpatcher.internal.modules.common.MCPMath;
+import com.falsepattern.mcpatcher.internal.modules.common.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +32,6 @@ import org.jetbrains.annotations.NotNull;
 import net.minecraft.block.Block;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Map;
 
@@ -67,7 +67,7 @@ public class NaturalTexturesEngine {
      * - Bottom Right
      * - Bottom Left
      */
-    public static void applyNaturalTexture(Block block, int x, int y, int z, @NotNull ForgeDirection side, @NotNull IIcon texture,
+    public static void applyNaturalTexture(Block block, int x, int y, int z, @NotNull Side side, @NotNull IIcon texture,
                                            double[] vertexUs, double[] vertexVs) {
         // Ignore blocks rendered in inventory / player's hand
         if (x == 0 && y == 0 && z == 0) return;
@@ -148,7 +148,7 @@ public class NaturalTexturesEngine {
 
     }
 
-    private static int getRandom(int x , int y, int z, @NotNull ForgeDirection side, int salt) {
+    private static int getRandom(int x , int y, int z, @NotNull Side side, int salt) {
         int rand = MCPMath.intHash(side.ordinal() + 37);
         rand = MCPMath.intHash(rand + x);
         rand = MCPMath.intHash(rand + z);
