@@ -23,9 +23,11 @@
 package com.falsepattern.mcpatcher.internal.modules.ctm;
 
 import com.falsepattern.mcpatcher.Tags;
+import com.falsepattern.mcpatcher.internal.modules.common.Axis;
 import com.falsepattern.mcpatcher.internal.modules.common.Identity2ObjectHashMap;
 import com.falsepattern.mcpatcher.internal.modules.common.MCPMath;
 import com.falsepattern.mcpatcher.internal.modules.common.ResourceScanner;
+import com.falsepattern.mcpatcher.internal.modules.common.Side;
 import com.falsepattern.mcpatcher.internal.modules.overlay.ResourceGenerator;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;

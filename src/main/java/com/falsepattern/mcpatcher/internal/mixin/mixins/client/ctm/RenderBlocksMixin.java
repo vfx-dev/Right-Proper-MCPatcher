@@ -25,7 +25,7 @@ package com.falsepattern.mcpatcher.internal.mixin.mixins.client.ctm;
 import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.falsepattern.mcpatcher.internal.modules.ctm.CTMEngine;
 import com.falsepattern.mcpatcher.internal.modules.ctm.PaneRenderHelper;
-import com.falsepattern.mcpatcher.internal.modules.ctm.Side;
+import com.falsepattern.mcpatcher.internal.modules.common.Side;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;

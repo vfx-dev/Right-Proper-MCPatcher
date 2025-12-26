@@ -25,6 +25,7 @@ package com.falsepattern.mcpatcher.internal.modules.ctm;
 import com.falsepattern.mcpatcher.internal.modules.common.CommonParser;
 import com.falsepattern.mcpatcher.internal.modules.common.IntRange;
 import com.falsepattern.mcpatcher.internal.modules.common.ResourceScanner;
+import com.falsepattern.mcpatcher.internal.modules.common.Side;
 import com.falsepattern.mcpatcher.internal.modules.common.WeightedRandom;
 import com.falsepattern.mcpatcher.internal.modules.overlay.ResourceGenerator;
 import it.unimi.dsi.fastutil.ints.IntList;

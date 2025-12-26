@@ -20,7 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.falsepattern.mcpatcher.internal.modules.ctm;
+package com.falsepattern.mcpatcher.internal.modules.common;
 
 public enum Axis {
     Y,
