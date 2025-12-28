@@ -76,10 +76,10 @@ public class NaturalTexturesEngine {
         if (!naturalTexturesInfo.containsKey(texName)) return;
         NaturalTexturesInfo texInfo = naturalTexturesInfo.get(texName);
 
-        int rand = getRandom(x, y, z, side, 0);
+        int rand = getRandom(x, y, z, side.ordinal());
         rotateQuadUVs(texInfo.getRadiansFromRandom(rand), texture, vertexUs, vertexVs);
 
-        int rand2 = getRandom(x, y, z, side, rand);
+        int rand2 = getRandom(x, y, z, rand);
         if(texInfo.getFlipFromRandom(rand2)) {
             mirrorQuadUVs(vertexUs);
         }
@@ -148,12 +148,11 @@ public class NaturalTexturesEngine {
 
     }
 
-    private static int getRandom(int x , int y, int z, @NotNull Side side, int salt) {
-        int rand = MCPMath.intHash(side.ordinal() + 37);
+    private static int getRandom(int x , int y, int z, int salt) {
+        int rand = MCPMath.intHash(salt + 37);
         rand = MCPMath.intHash(rand + x);
         rand = MCPMath.intHash(rand + z);
         rand = MCPMath.intHash(rand + y);
-        rand = MCPMath.intHash(rand + salt);
         return rand & Integer.MAX_VALUE;
     }
 }
