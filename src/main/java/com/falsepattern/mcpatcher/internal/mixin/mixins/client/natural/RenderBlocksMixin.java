@@ -25,6 +25,8 @@ package com.falsepattern.mcpatcher.internal.mixin.mixins.client.natural;
 import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
 import com.falsepattern.mcpatcher.internal.modules.common.Side;
 import com.falsepattern.mcpatcher.internal.modules.natural.NaturalTexturesEngine;
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.lib.Opcodes;
@@ -37,6 +39,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 
 @Mixin(RenderBlocks.class)
@@ -69,7 +72,7 @@ public abstract class RenderBlocksMixin {
         NaturalTexturesEngine.applyNaturalTexture(block, x, y, z, side, texture, mcp$vertexUs, mcp$vertexVs);
     }
 
-    /** UV Capturing Mixins */
+    /**  Standard block render: UV Capturing Mixins */
 
     // Down
     @Inject(method = "renderFaceYNeg", require = 1, at = @At(value = "FIELD",
@@ -197,7 +200,7 @@ public abstract class RenderBlocksMixin {
         mcp$vertexVs[2] = swap;
     }
 
-    /** UV apply Mixins */
+    /**  Standard block render: UV apply Mixins */
     @ModifyVariable(method = {"renderFaceXNeg", "renderFaceXPos",
                               "renderFaceYNeg", "renderFaceYPos",
                               "renderFaceZNeg", "renderFaceZPos"},
@@ -284,5 +287,58 @@ public abstract class RenderBlocksMixin {
                                           shift = At.Shift.AFTER))
     private double overwriteVD10(double d10) {
         return ModuleConfig.naturalTextures ? mcp$vertexVs[3] : d10;
+    }
+
+    /** Vines */
+    @Expression("(? & 2) != 0") // East
+    @ModifyExpressionValue(method = "renderBlockVine", require = 1, at = @At(value = "MIXINEXTRAS:EXPRESSION"))
+    private boolean swizzleVerticesVineXPos(boolean original, Block block, int x, int y, int z,
+                                        @Local(ordinal = 0) IIcon texture, @Local Tessellator tessellator,
+                                        @Local(ordinal = 0) double minU, @Local(ordinal = 1) double minV,
+                                        @Local(ordinal = 2) double maxU, @Local(ordinal = 3) double maxV,
+                                        @Local(ordinal = 4) double offset) {
+        if(!original || !ModuleConfig.naturalTextures) return original;
+
+        mcp$captureVertexes(block, x, y, z, Side.XPos, texture, minU, minV, maxU, maxV, minU, maxV, maxU, minV);
+
+        // Front face
+        tessellator.addVertexWithUV(x + offset, y + 1, z + 1, mcp$vertexUs[0], mcp$vertexVs[0]);
+        tessellator.addVertexWithUV(x + offset, y + 0, z + 1, mcp$vertexUs[2], mcp$vertexVs[2]);
+        tessellator.addVertexWithUV(x + offset, y + 0, z + 0, mcp$vertexUs[1], mcp$vertexVs[1]);
+        tessellator.addVertexWithUV(x + offset, y + 1, z + 0, mcp$vertexUs[3], mcp$vertexVs[3]);
+
+        // Back face
+        tessellator.addVertexWithUV(x + offset, y + 1, z + 0, mcp$vertexUs[3], mcp$vertexVs[3]);
+        tessellator.addVertexWithUV(x + offset, y + 0, z + 0, mcp$vertexUs[1], mcp$vertexVs[1]);
+        tessellator.addVertexWithUV(x + offset, y + 0, z + 1, mcp$vertexUs[2], mcp$vertexVs[2]);
+        tessellator.addVertexWithUV(x + offset, y + 1, z + 1, mcp$vertexUs[0], mcp$vertexVs[0]);
+
+        return false;
+    }
+
+    @Expression("(? & 8) != 0") // West
+    @ModifyExpressionValue(method = "renderBlockVine", require = 1, at = @At(value = "MIXINEXTRAS:EXPRESSION"))
+    private boolean swizzleVerticesVineXNeg(boolean original, Block block, int x, int y, int z,
+                                            @Local(ordinal = 0) IIcon texture, @Local Tessellator tessellator,
+                                            @Local(ordinal = 0) double minU, @Local(ordinal = 1) double minV,
+                                            @Local(ordinal = 2) double maxU, @Local(ordinal = 3) double maxV,
+                                            @Local(ordinal = 4) double offset) {
+        if(!original || !ModuleConfig.naturalTextures) return original;
+
+        mcp$captureVertexes(block, x, y, z, Side.XNeg, texture, maxU, minV, minU, minV, minU, maxV, maxU, maxV);
+
+        // Front face
+        tessellator.addVertexWithUV((x + 1) - offset, y + 0, z + 1, mcp$vertexUs[3], mcp$vertexVs[3]);
+        tessellator.addVertexWithUV((x + 1) - offset, y + 1, z + 1, mcp$vertexUs[0], mcp$vertexVs[0]);
+        tessellator.addVertexWithUV((x + 1) - offset, y + 1, z + 0, mcp$vertexUs[1], mcp$vertexVs[1]);
+        tessellator.addVertexWithUV((x + 1) - offset, y + 0, z + 0, mcp$vertexUs[2], mcp$vertexVs[2]);
+
+        // Back face
+        tessellator.addVertexWithUV((x + 1) - offset, y + 0, z + 0, mcp$vertexUs[2], mcp$vertexVs[2]);
+        tessellator.addVertexWithUV((x + 1) - offset, y + 1, z + 0, mcp$vertexUs[1], mcp$vertexVs[1]);
+        tessellator.addVertexWithUV((x + 1) - offset, y + 1, z + 1, mcp$vertexUs[0], mcp$vertexVs[0]);
+        tessellator.addVertexWithUV((x + 1) - offset, y + 0, z + 1, mcp$vertexUs[3], mcp$vertexVs[3]);
+
+        return false;
     }
 }
