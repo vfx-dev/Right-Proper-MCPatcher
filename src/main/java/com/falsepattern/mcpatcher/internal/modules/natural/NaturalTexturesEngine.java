@@ -123,13 +123,13 @@ public class NaturalTexturesEngine {
     private static void rotateQuadUVs(double rotationAngle, IIcon texture, double[] vertexUs, double[] vertexVs) {
         if(rotationAngle == 0D) return;
 
-        rotationAngle %= 2D * Math.PI;
-
         float lengthU = texture.getMaxU() - texture.getMinU();
         float lengthV = texture.getMaxV() - texture.getMinV();
 
         float centerU = texture.getMinU() + lengthU / 2F;
         float centerV = texture.getMinV() + lengthV / 2F;
+
+        rotationAngle %= 2D * Math.PI;
 
         float rotSin = MathHelper.sin((float) rotationAngle);
         float rotCos = MathHelper.cos((float) rotationAngle);
