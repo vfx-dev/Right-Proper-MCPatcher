@@ -78,8 +78,11 @@ public abstract class RenderBlocksMixin {
         NaturalTexturesEngine.applyNaturalTexture(x, y, z, side, texture, mcp$vertexUs, mcp$vertexVs);
     }
 
-    @Inject(method = { "drawCrossedSquares" }, at = @At(value = "HEAD"))
-    private void mcp$resetVertexCounter(IIcon texture, double x, double y, double z, float height, CallbackInfo ci) {
+    @Inject(method = {
+            "drawCrossedSquares",
+            "renderBlockCropsImpl",
+    }, at = @At(value = "HEAD"))
+    private void mcp$resetVertexCounter(CallbackInfo ci) {
         mcp$vertexCounter = 0;
     }
 
@@ -462,6 +465,43 @@ public abstract class RenderBlocksMixin {
             mcp$vertexVs[1] = swap;
         }
 
+        original.call(instance, x, y, z, mcp$vertexUs[vertIndex], mcp$vertexVs[vertIndex]);
+        mcp$vertexCounter++;
+    }
+
+    /** Crops */
+    @WrapOperation(
+            method = "renderBlockCropsImpl",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+    private void swizzleCropVertexUV(Tessellator instance, double x, double y, double z, double u, double v,
+                                     Operation<Void> original, @Local IIcon texture,
+                                     @Local(ordinal = 3) double minU, @Local(ordinal = 4) double minV,
+                                     @Local(ordinal = 5) double maxU, @Local(ordinal = 6) double maxV) {
+        if (!ModuleConfig.naturalTextures) {
+            original.call(instance, x, y, z, u, v);
+            return;
+        }
+
+        if (mcp$vertexCounter % 8 == 0) { // First vertex, rotate UVs for the next 8 calls (front and back quads for each side)
+
+            Side side = Side.values()[((mcp$vertexCounter / 8 + 2) % 4) + 2];
+
+            mcp$captureVertexes((int) x, (int) y, (int) z, side, texture, minU, maxV, maxU, maxV, maxU, minV, minU, minV);
+
+            double swap = mcp$vertexUs[0];
+            mcp$vertexUs[0] = mcp$vertexUs[3];
+            mcp$vertexUs[3] = mcp$vertexUs[2];
+            mcp$vertexUs[2] = mcp$vertexUs[1];
+            mcp$vertexUs[1] = swap;
+
+            swap = mcp$vertexVs[0];
+            mcp$vertexVs[0] = mcp$vertexVs[3];
+            mcp$vertexVs[3] = mcp$vertexVs[2];
+            mcp$vertexVs[2] = mcp$vertexVs[1];
+            mcp$vertexVs[1] = swap;
+        }
+
+        int vertIndex = mcp$vertexCounter % 4;
         original.call(instance, x, y, z, mcp$vertexUs[vertIndex], mcp$vertexVs[vertIndex]);
         mcp$vertexCounter++;
     }
