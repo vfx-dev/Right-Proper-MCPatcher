@@ -28,6 +28,8 @@ import com.falsepattern.mcpatcher.internal.modules.natural.NaturalTexturesEngine
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.lib.Opcodes;
@@ -53,6 +55,9 @@ public abstract class RenderBlocksMixin {
     private final double[] mcp$vertexVs = new double[4];
 
     @Unique
+    private int mcp$vertexCounter = 0;
+
+    @Unique
     private void mcp$captureVertexes(int x, int y, int z, Side side, @Nullable IIcon texture,
                                      double uA, double vA, double uB, double vB,
                                      double uC, double vC, double uD, double vD) {
@@ -71,6 +76,11 @@ public abstract class RenderBlocksMixin {
         if (texture == null) return;
 
         NaturalTexturesEngine.applyNaturalTexture(x, y, z, side, texture, mcp$vertexUs, mcp$vertexVs);
+    }
+
+    @Inject(method = { "drawCrossedSquares" }, at = @At(value = "HEAD"))
+    private void mcp$resetVertexCounter(IIcon texture, double x, double y, double z, float height, CallbackInfo ci) {
+        mcp$vertexCounter = 0;
     }
 
     /**  Standard block render: UV Capturing Mixins */
@@ -418,5 +428,41 @@ public abstract class RenderBlocksMixin {
         tessellator.addVertexWithUV(x + 0, (y + 1) - offset, z + 0, mcp$vertexUs[3], mcp$vertexVs[3]);
 
         return false;
+    }
+
+    /** Crossed Squares */
+    @WrapOperation(
+            method = "drawCrossedSquares",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/Tessellator;addVertexWithUV(DDDDD)V"))
+    private void swizzleCrossedSquareVertexUV(Tessellator instance, double x, double y, double z, double u, double v,
+                                              Operation<Void> original, @Local(argsOnly = true) IIcon texture,
+                                              @Local(ordinal = 3) double minU, @Local(ordinal = 4) double minV,
+                                              @Local(ordinal = 5) double maxU, @Local(ordinal = 6) double maxV) {
+        if (!ModuleConfig.naturalTextures) {
+            original.call(instance, x, y, z, u, v);
+            return;
+        }
+
+        int vertIndex = mcp$vertexCounter % 4;
+        if (vertIndex == 0) { // First vertex, rotate UVs for the next 4 calls
+
+            // Since the quads are diagonal, the choice of side is arbitrary
+            mcp$captureVertexes((int) x, (int) y, (int) z, Side.YPos, texture, minU, maxV, maxU, maxV, maxU, minV, minU, minV);
+
+            double swap = mcp$vertexUs[0];
+            mcp$vertexUs[0] = mcp$vertexUs[3];
+            mcp$vertexUs[3] = mcp$vertexUs[2];
+            mcp$vertexUs[2] = mcp$vertexUs[1];
+            mcp$vertexUs[1] = swap;
+
+            swap = mcp$vertexVs[0];
+            mcp$vertexVs[0] = mcp$vertexVs[3];
+            mcp$vertexVs[3] = mcp$vertexVs[2];
+            mcp$vertexVs[2] = mcp$vertexVs[1];
+            mcp$vertexVs[1] = swap;
+        }
+
+        original.call(instance, x, y, z, mcp$vertexUs[vertIndex], mcp$vertexVs[vertIndex]);
+        mcp$vertexCounter++;
     }
 }
