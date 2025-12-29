@@ -53,7 +53,7 @@ public abstract class RenderBlocksMixin {
     private final double[] mcp$vertexVs = new double[4];
 
     @Unique
-    private void mcp$captureVertexes(Block block, int x, int y, int z, Side side, @Nullable IIcon texture,
+    private void mcp$captureVertexes(int x, int y, int z, Side side, @Nullable IIcon texture,
                                      double uA, double vA, double uB, double vB,
                                      double uC, double vC, double uD, double vD) {
         mcp$vertexUs[0] = uA;
@@ -68,9 +68,9 @@ public abstract class RenderBlocksMixin {
         mcp$vertexUs[3] = uD;
         mcp$vertexVs[3] = vD;
 
-        if(texture == null) return;
+        if (texture == null) return;
 
-        NaturalTexturesEngine.applyNaturalTexture(block, x, y, z, side, texture, mcp$vertexUs, mcp$vertexVs);
+        NaturalTexturesEngine.applyNaturalTexture(x, y, z, side, texture, mcp$vertexUs, mcp$vertexVs);
     }
 
     /**  Standard block render: UV Capturing Mixins */
@@ -84,8 +84,8 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 6) double d6, @Local(ordinal = 7) double d7, @Local(ordinal = 8) double d8,
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
-        if(!ModuleConfig.naturalTextures) return;
-        mcp$captureVertexes(block, (int) x, (int) y, (int) z, Side.YNeg, texture, d8, d10, d4, d6, d7, d9, d3, d5);
+        if (!ModuleConfig.naturalTextures) return;
+        mcp$captureVertexes((int) x, (int) y, (int) z, Side.YNeg, texture, d8, d10, d4, d6, d7, d9, d3, d5);
 
         double swap = mcp$vertexUs[0];
         mcp$vertexUs[0] = mcp$vertexUs[3];
@@ -105,8 +105,8 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 6) double d6, @Local(ordinal = 7) double d7, @Local(ordinal = 8) double d8,
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
-        if(!ModuleConfig.naturalTextures) return;
-        mcp$captureVertexes(block, (int) x, (int) y, (int) z, Side.YPos, texture, d4, d6, d3, d5, d7, d9, d8, d10);
+        if (!ModuleConfig.naturalTextures) return;
+        mcp$captureVertexes((int) x, (int) y, (int) z, Side.YPos, texture, d4, d6, d3, d5, d7, d9, d8, d10);
 
         double swap = mcp$vertexUs[0];
         mcp$vertexUs[0] = mcp$vertexUs[1];
@@ -126,8 +126,8 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 6) double d6, @Local(ordinal = 7) double d7, @Local(ordinal = 8) double d8,
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
-        if(!ModuleConfig.naturalTextures) return;
-        mcp$captureVertexes(block, (int) x, (int) y, (int) z, Side.ZNeg, texture, d3, d5, d7, d9, d4, d6, d8, d10);
+        if (!ModuleConfig.naturalTextures) return;
+        mcp$captureVertexes((int) x, (int) y, (int) z, Side.ZNeg, texture, d3, d5, d7, d9, d4, d6, d8, d10);
 
         double swap = mcp$vertexUs[1];
         mcp$vertexUs[1] = mcp$vertexUs[2];
@@ -147,8 +147,8 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 6) double d6, @Local(ordinal = 7) double d7, @Local(ordinal = 8) double d8,
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
-        if(!ModuleConfig.naturalTextures) return;
-        mcp$captureVertexes(block, (int) x, (int) y, (int) z, Side.ZPos, texture, d3, d5, d4, d6, d8, d10, d7, d9);
+        if (!ModuleConfig.naturalTextures) return;
+        mcp$captureVertexes((int) x, (int) y, (int) z, Side.ZPos, texture, d3, d5, d4, d6, d8, d10, d7, d9);
 
         double swap = mcp$vertexUs[2];
         mcp$vertexUs[2] = mcp$vertexUs[3];
@@ -168,8 +168,8 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 6) double d6, @Local(ordinal = 7) double d7, @Local(ordinal = 8) double d8,
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
-        if(!ModuleConfig.naturalTextures) return;
-        mcp$captureVertexes(block, (int) x, (int) y, (int) z, Side.XNeg, texture, d3, d5, d7, d9, d4, d6, d8, d10);
+        if (!ModuleConfig.naturalTextures) return;
+        mcp$captureVertexes((int) x, (int) y, (int) z, Side.XNeg, texture, d3, d5, d7, d9, d4, d6, d8, d10);
 
         double swap = mcp$vertexUs[1];
         mcp$vertexUs[1] = mcp$vertexUs[2];
@@ -189,8 +189,8 @@ public abstract class RenderBlocksMixin {
                                    @Local(ordinal = 6) double d6, @Local(ordinal = 7) double d7, @Local(ordinal = 8) double d8,
                                    @Local(ordinal = 9) double d9, @Local(ordinal = 10) double d10) {
 
-        if(!ModuleConfig.naturalTextures) return;
-        mcp$captureVertexes(block, (int) x, (int) y, (int) z, Side.XPos, texture, d3, d5, d7, d9, d4, d6, d8, d10);
+        if (!ModuleConfig.naturalTextures) return;
+        mcp$captureVertexes((int) x, (int) y, (int) z, Side.XPos, texture, d3, d5, d7, d9, d4, d6, d8, d10);
 
         double swap = mcp$vertexUs[1];
         mcp$vertexUs[1] = mcp$vertexUs[2];
@@ -298,9 +298,9 @@ public abstract class RenderBlocksMixin {
                                         @Local(ordinal = 0) double minU, @Local(ordinal = 1) double minV,
                                         @Local(ordinal = 2) double maxU, @Local(ordinal = 3) double maxV,
                                         @Local(ordinal = 4) double offset) {
-        if(!original || !ModuleConfig.naturalTextures) return original;
+        if (!original || !ModuleConfig.naturalTextures) return original;
 
-        mcp$captureVertexes(block, x, y, z, Side.XPos, texture, minU, minV, maxU, maxV, minU, maxV, maxU, minV);
+        mcp$captureVertexes(x, y, z, Side.XPos, texture, minU, minV, maxU, maxV, minU, maxV, maxU, minV);
 
         // Front face
         tessellator.addVertexWithUV(x + offset, y + 1, z + 1, mcp$vertexUs[0], mcp$vertexVs[0]);
@@ -324,9 +324,9 @@ public abstract class RenderBlocksMixin {
                                             @Local(ordinal = 0) double minU, @Local(ordinal = 1) double minV,
                                             @Local(ordinal = 2) double maxU, @Local(ordinal = 3) double maxV,
                                             @Local(ordinal = 4) double offset) {
-        if(!original || !ModuleConfig.naturalTextures) return original;
+        if (!original || !ModuleConfig.naturalTextures) return original;
 
-        mcp$captureVertexes(block, x, y, z, Side.XNeg, texture, maxU, minV, minU, minV, minU, maxV, maxU, maxV);
+        mcp$captureVertexes(x, y, z, Side.XNeg, texture, maxU, minV, minU, minV, minU, maxV, maxU, maxV);
 
         // Front face
         tessellator.addVertexWithUV((x + 1) - offset, y + 0, z + 1, mcp$vertexUs[3], mcp$vertexVs[3]);
@@ -350,9 +350,9 @@ public abstract class RenderBlocksMixin {
                                             @Local(ordinal = 0) double minU, @Local(ordinal = 1) double minV,
                                             @Local(ordinal = 2) double maxU, @Local(ordinal = 3) double maxV,
                                             @Local(ordinal = 4) double offset) {
-        if(!original || !ModuleConfig.naturalTextures) return original;
+        if (!original || !ModuleConfig.naturalTextures) return original;
 
-        mcp$captureVertexes(block, x, y, z, Side.ZPos, texture, minU, minV, maxU, minV, maxU, maxV, minU, maxV);
+        mcp$captureVertexes(x, y, z, Side.ZPos, texture, minU, minV, maxU, minV, maxU, maxV, minU, maxV);
 
         // Front face
         tessellator.addVertexWithUV(x + 1, y + 0, z + offset, mcp$vertexUs[2], mcp$vertexVs[2]);
@@ -376,9 +376,9 @@ public abstract class RenderBlocksMixin {
                                             @Local(ordinal = 0) double minU, @Local(ordinal = 1) double minV,
                                             @Local(ordinal = 2) double maxU, @Local(ordinal = 3) double maxV,
                                             @Local(ordinal = 4) double offset) {
-        if(!original || !ModuleConfig.naturalTextures) return original;
+        if (!original || !ModuleConfig.naturalTextures) return original;
 
-        mcp$captureVertexes(block, x, y, z, Side.ZNeg, texture, maxU, maxV, minU, maxV, minU, minV, maxU, minV);
+        mcp$captureVertexes(x, y, z, Side.ZNeg, texture, maxU, maxV, minU, maxV, minU, minV, maxU, minV);
 
         // Front face
         tessellator.addVertexWithUV(x + 1, y + 1, (z + 1) - offset, mcp$vertexUs[2], mcp$vertexVs[2]);
@@ -407,11 +407,11 @@ public abstract class RenderBlocksMixin {
                                             @Local(ordinal = 0) double minU, @Local(ordinal = 1) double minV,
                                             @Local(ordinal = 2) double maxU, @Local(ordinal = 3) double maxV,
                                             @Local(ordinal = 4) double offset) {
-        if(!original || !ModuleConfig.naturalTextures) return original;
+        if (!original || !ModuleConfig.naturalTextures) return original;
 
-        mcp$captureVertexes(block, x, y, z, Side.YNeg, texture, maxU, maxV, minU, maxV, minU, minV, maxU, minV);
+        mcp$captureVertexes(x, y, z, Side.YNeg, texture, maxU, maxV, minU, maxV, minU, minV, maxU, minV);
 
-        // Front face (bottom facing vine has no backface by default)
+        // Front face (bottom facing vine has no backface)
         tessellator.addVertexWithUV(x + 1, (y + 1) - offset, z + 0, mcp$vertexUs[2], mcp$vertexVs[2]);
         tessellator.addVertexWithUV(x + 1, (y + 1) - offset, z + 1, mcp$vertexUs[1], mcp$vertexVs[1]);
         tessellator.addVertexWithUV(x + 0, (y + 1) - offset, z + 1, mcp$vertexUs[0], mcp$vertexVs[0]);

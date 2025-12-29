@@ -29,7 +29,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import net.minecraft.block.Block;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 
@@ -53,7 +52,6 @@ public class NaturalTexturesEngine {
     /**
      * Attempts to apply UV overrides to a quad's texture, based on certain criteria.
      * This method mutates the two arrays passed into it.
-     * @param block The block this texture applies to
      * @param x The X coordinate of the block
      * @param y The Y coordinate of the block
      * @param z The Z coordinate of the block
@@ -67,7 +65,7 @@ public class NaturalTexturesEngine {
      * - Bottom Right
      * - Bottom Left
      */
-    public static void applyNaturalTexture(Block block, int x, int y, int z, @NotNull Side side, @NotNull IIcon texture,
+    public static void applyNaturalTexture(int x, int y, int z, @NotNull Side side, @NotNull IIcon texture,
                                            double[] vertexUs, double[] vertexVs) {
         // Ignore blocks rendered in inventory / player's hand
         if (x == 0 && y == 0 && z == 0) return;
@@ -80,7 +78,7 @@ public class NaturalTexturesEngine {
         rotateQuadUVs(texInfo.getRadiansFromRandom(rand), texture, vertexUs, vertexVs);
 
         int rand2 = getRandom(x, y, z, rand);
-        if(texInfo.getFlipFromRandom(rand2)) {
+        if (texInfo.getFlipFromRandom(rand2)) {
             mirrorQuadUVs(vertexUs);
         }
     }
@@ -121,7 +119,7 @@ public class NaturalTexturesEngine {
      * - Bottom Left
      */
     private static void rotateQuadUVs(double rotationAngle, IIcon texture, double[] vertexUs, double[] vertexVs) {
-        if(rotationAngle == 0D) return;
+        if (rotationAngle == 0D) return;
 
         float lengthU = texture.getMaxU() - texture.getMinU();
         float lengthV = texture.getMaxV() - texture.getMinV();
@@ -138,7 +136,7 @@ public class NaturalTexturesEngine {
         double aspectV = 1F / aspectU;
 
         // Rotate
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             double deltaU = (vertexUs[i] - centerU) * aspectU;
             double deltaV = (vertexVs[i] - centerV) * aspectV;
 
