@@ -22,6 +22,7 @@
 
 package com.falsepattern.mcpatcher.internal.modules.natural;
 
+import com.falsepattern.mcpatcher.internal.config.ExtraConfig;
 import com.falsepattern.mcpatcher.internal.modules.common.ResourceScanner;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.val;
@@ -68,6 +69,10 @@ public class NaturalTexturesParser {
                     }
 
                     LOG.debug("Loaded natural textures resource {} from pack {}", name, pack.getPackName());
+
+                    if(!ExtraConfig.naturalTexturesStack) {
+                        return map;
+                    }
                 } catch (IOException ignored) {
                     LOG.warn("Failed to read natural textures resource {} from pack {}. Skipping...", name, pack.getPackName());
                 }
