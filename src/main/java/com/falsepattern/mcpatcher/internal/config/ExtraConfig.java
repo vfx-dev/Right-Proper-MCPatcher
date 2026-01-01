@@ -22,35 +22,35 @@
 
 package com.falsepattern.mcpatcher.internal.config;
 
-import com.falsepattern.lib.config.ConfigException;
-import com.falsepattern.lib.config.SimpleGuiConfig;
-import com.falsepattern.lib.config.SimpleGuiFactory;
+import com.falsepattern.lib.config.Config;
+import com.falsepattern.lib.config.ConfigurationManager;
 import com.falsepattern.mcpatcher.Tags;
 import lombok.NoArgsConstructor;
-import lombok.val;
 
-import net.minecraft.client.gui.GuiScreen;
-
-import java.util.ArrayList;
-
+@Config.Comment("Additional Runtime Configurations")
+@Config.LangKey
+@Config(modid = Tags.MOD_ID,
+        category = "02_extras")
 @NoArgsConstructor
-public final class MCPatcherGuiFactory implements SimpleGuiFactory {
-    @Override
-    public Class<? extends GuiScreen> mainConfigGuiClass() {
-        return MCPatcherGuiConfig.class;
+public final class ExtraConfig {
+    //@formatter:off
+    @Config.LangKey
+    @Config.Name("naturalTexturesStack")
+    @Config.DefaultBoolean(true)
+    public static boolean naturalTexturesStack;
+    //@formatter:on
+
+    // region Init
+    static {
+        ConfigurationManager.selfInit();
+        ModuleConfig.init();
     }
 
-    private static Class<?>[] getConfigClasses() {
-        val result = new ArrayList<Class<?>>();
-        result.add(ModuleConfig.class);
-        result.add(MixinConfig.class);
-        result.add(ExtraConfig.class);
-        return result.toArray(new Class<?>[0]);
-    }
+    /**
+     * This is here to make the static initializer run
+     */
+    public static void init() {
 
-    public static class MCPatcherGuiConfig extends SimpleGuiConfig {
-        public MCPatcherGuiConfig(GuiScreen parent) throws ConfigException {
-            super(parent, Tags.MOD_ID, Tags.MOD_NAME, getConfigClasses());
-        }
     }
+    // endregion
 }

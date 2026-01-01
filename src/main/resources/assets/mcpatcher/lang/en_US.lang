@@ -28,3 +28,8 @@ config.mcpatcher.01_mixins.customItemTexturesMixins=Custom Item Textures Mixins
 config.mcpatcher.01_mixins.customItemTexturesMixins.tooltip=Set to Disabled this if you don't want custom item texture mixins to land.\n - Weak: Will still load if some fail to apply\n - Regular: Will crash the game on failure\n - Epic: Uses ASM to rename certain methods\nThis is required for customItemTextures.
 config.mcpatcher.01_mixins.randomMobsMixins=Random Mobs Mixins
 config.mcpatcher.01_mixins.randomMobsMixins.tooltip=Disable this if you don't want random mob mixins to land.\nThis is required for randomMobs.
+
+config.mcpatcher.02_extras=Extras
+config.mcpatcher.02_extras.tooltip=Additional Runtime Configurations
+config.mcpatcher.02_extras.naturalTexturesStack=Stacking Natural Textures
+config.mcpatcher.02_extras.naturalTexturesStack.tooltip=Disable this if you don't want Natural Textures configuration files from multiple resource packs to 'stack' on top of each other in order of priority.\nIf true, the total set of Natural Textures will be created using all resource packs in the chain.\nIf false, only the highest priority 'natural.properties' file will be used.
