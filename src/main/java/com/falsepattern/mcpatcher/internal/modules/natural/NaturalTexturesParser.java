@@ -26,13 +26,12 @@ import com.falsepattern.mcpatcher.internal.modules.common.ResourceScanner;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.val;
 
-import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -43,35 +42,39 @@ public class NaturalTexturesParser {
     private static Pattern commentLinePattern;
     private static Pattern entryLinePattern;
 
-    public static Map<String, NaturalTexturesInfo> parseFirstAvailableResource(String... resourceNames) {
+    public static Map<String, NaturalTexturesInfo> parseResourcePacksInOrder() {
         val map = new Object2ObjectOpenHashMap<String, NaturalTexturesInfo>();
-        for (val resourceName : resourceNames) {
-            IResource resource;
-            try {
-                resource = ResourceScanner.getResource(new ResourceLocation(resourceName));
-                if(resource == null) {
-                    continue;
-                }
-            } catch (IOException ignored) {
+        val packs = ResourceScanner.resourcePacks();
+
+        compilePatterns();
+        for (val pack : packs) {
+            if (pack == null) {
                 continue;
             }
-
-            try (val br = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
-                compilePatterns();
-                String line;
-                while ((line = br.readLine()) != null) {
-                    parseLine(line, map);
+            val names = ResourceScanner.collectFiles(pack, "", "natural.properties", false);
+            names.sort(Comparator.naturalOrder());
+            for (val name : names) {
+                // Prioritize mcpatcher path first, then optifine path for backwards compatibility
+                if (!(name.equals("mcpatcher/natural.properties") || name.equals("optifine/natural.properties"))) {
+                    continue;
                 }
 
-                LOG.debug("Loaded natural textures resource {}", resourceName);
-                return map;
-            } catch (IOException ignored) {
-                LOG.warn("Failed to read natural textures resource {}. Skipping...", resourceName);
-            } finally {
-                clearPatterns();
+                val loc = new ResourceLocation(name);
+
+                try (val br = new BufferedReader(new InputStreamReader(pack.getInputStream(loc)))) {
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        parseLine(line, map);
+                    }
+
+                    LOG.debug("Loaded natural textures resource {} from pack {}", name, pack.getPackName());
+                } catch (IOException ignored) {
+                    LOG.warn("Failed to read natural textures resource {} from pack {}. Skipping...", name, pack.getPackName());
+                }
             }
         }
-        LOG.debug("No natural textures resource available. Resources searched: {}", Arrays.toString(resourceNames));
+        clearPatterns();
+
         return map;
     }
 
@@ -113,7 +116,7 @@ public class NaturalTexturesParser {
             key = key.substring(10);
         }
         if(map.containsKey(key)) {
-            LOG.warn("Duplicate entry for found in natural.properties: [entry={}]", key);
+            LOG.debug("Skipping pre-existing in for natural.properties: [entry={}]", key);
             return;
         }
 

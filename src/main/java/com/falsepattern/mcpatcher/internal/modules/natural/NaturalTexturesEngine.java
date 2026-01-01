@@ -43,10 +43,7 @@ public class NaturalTexturesEngine {
     public static void reloadNaturalTextureResources() {
         LOG.debug("Reloading Natural Textures");
 
-        // Try reading from mcpatcher path first, fallback to optifine for backwards compatibility
-        naturalTexturesInfo = NaturalTexturesParser.parseFirstAvailableResource(
-                "minecraft:mcpatcher/natural.properties",
-                "minecraft:optifine/natural.properties");
+        naturalTexturesInfo = NaturalTexturesParser.parseResourcePacksInOrder();
     }
 
     /**
