@@ -41,6 +41,8 @@ public final class ModuleConfig {
     @Config.DefaultBoolean(true)
     public static boolean connectedTextures;
 
+    @Config.Comment({"Runtime toggle for natural textures.",
+                     "Requires naturalTexturesMixins enabled."})
     @Config.LangKey
     @Config.Name("naturalTextures")
     @Config.DefaultBoolean(false)

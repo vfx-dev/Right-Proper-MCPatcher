@@ -34,6 +34,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public final class ExtraConfig {
     //@formatter:off
+    @Config.Comment({"Disable this if you don't want Natural Textures configuration files from multiple resource packs to 'stack' on top of each other in order of priority.",
+                     "If true, the total set of Natural Textures will be created using all resource packs in the chain.",
+                     "If false, only the highest priority 'natural.properties' file will be used."})
     @Config.LangKey
     @Config.Name("naturalTexturesStack")
     @Config.DefaultBoolean(true)
