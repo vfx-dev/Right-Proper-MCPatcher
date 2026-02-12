@@ -45,7 +45,7 @@ public final class ModuleConfig {
                      "Requires naturalTexturesMixins enabled."})
     @Config.LangKey
     @Config.Name("naturalTextures")
-    @Config.DefaultBoolean(false)
+    @Config.DefaultBoolean(true)
     public static boolean naturalTextures;
 
     @Config.Comment({"Allow regular glass blocks, glass panes, and beacon glass to have semi-transparent textures.",
