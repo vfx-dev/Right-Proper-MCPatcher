@@ -26,6 +26,7 @@ import com.falsepattern.mcpatcher.internal.config.ExtraConfig;
 import com.falsepattern.mcpatcher.internal.modules.common.ResourceScanner;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -34,20 +35,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Comparator;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import static com.falsepattern.mcpatcher.internal.modules.natural.NaturalTexturesEngine.LOG;
 
 public class NaturalTexturesParser {
-    private static Pattern emptyLinePattern;
-    private static Pattern commentLinePattern;
-    private static Pattern entryLinePattern;
-
     public static Map<String, NaturalTexturesInfo> parseResourcePacksInOrder() {
         val map = new Object2ObjectOpenHashMap<String, NaturalTexturesInfo>();
         val packs = ResourceScanner.resourcePacks();
 
-        compilePatterns();
         for (val pack : packs) {
             if (pack == null) {
                 continue;
@@ -78,40 +73,29 @@ public class NaturalTexturesParser {
                 }
             }
         }
-        clearPatterns();
 
         return map;
     }
 
-    private static void compilePatterns() {
-        emptyLinePattern = Pattern.compile("^\\s+$");
-        commentLinePattern = Pattern.compile("(?s)^\\s*[#!].*$");
-
-        // Capture anything that looks like: "(some_characters)=(some_characters)",
-        // with optional spaces around (and inside) the two capture groups.
-        entryLinePattern = Pattern.compile(
-                "^\\s*([\\S&&[^=]]|[\\S&&[^=]][^=]*[\\S&&[^=]])\\s*=\\s*([\\S&&[^=]]|[\\S&&[^=]][^=]*[\\S&&[^=]])\\s*$");
-    }
-
-    private static void clearPatterns() {
-        emptyLinePattern = null;
-        commentLinePattern = null;
-        entryLinePattern = null;
-    }
-
     private static void parseLine(String line, Map<String, NaturalTexturesInfo> map) {
-        // Is empty line
-        if (line.isEmpty() || emptyLinePattern.matcher(line).matches()) return;
+        val parsedLine = line.trim();
 
-        // Is a comment line
-        if (commentLinePattern.matcher(line).matches()) return;
+        if(parsedLine.isEmpty() || StringUtils.startsWithAny(parsedLine, "#", "!")) return;
 
-        // Capture anything that looks like: "(some_characters)=(some_characters)",
-        // with optional spaces around (and inside) the two capture groups.
-        val match = entryLinePattern.matcher(line);
-        if (match.matches()) {
-            buildInfo(match.group(1), match.group(2), map);
-        } else {
+        boolean validParse = false;
+        val parsedSections = StringUtils.split(parsedLine, "=");
+        if (parsedSections != null && parsedSections.length == 2) {
+            val key = parsedSections[0].trim();
+            if (!key.isEmpty()) {
+                val value = parsedSections[1].trim();
+                if (!value.isEmpty()) {
+                    buildInfo(key, value, map);
+                    validParse = true;
+                }
+            }
+        }
+
+        if (!validParse) {
             LOG.warn("Skipping unparseable line in natural.properties: [line=\"{}\"]", line);
         }
     }
