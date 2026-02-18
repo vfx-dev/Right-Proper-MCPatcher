@@ -24,6 +24,7 @@ package com.falsepattern.mcpatcher.internal.modules.ctm;
 
 import com.falsepattern.mcpatcher.internal.Share;
 import com.falsepattern.mcpatcher.internal.config.ModuleConfig;
+import com.falsepattern.mcpatcher.internal.modules.common.Side;
 import ganymedes01.etfuturum.configuration.configs.ConfigMixins;
 import lombok.val;
 

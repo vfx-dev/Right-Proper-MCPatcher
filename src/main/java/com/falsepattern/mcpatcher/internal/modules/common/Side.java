@@ -20,16 +20,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.falsepattern.mcpatcher.internal.modules.ctm;
+package com.falsepattern.mcpatcher.internal.modules.common;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraftforge.common.util.ForgeDirection;
 
-import static com.falsepattern.mcpatcher.internal.modules.ctm.Axis.X;
-import static com.falsepattern.mcpatcher.internal.modules.ctm.Axis.Y;
-import static com.falsepattern.mcpatcher.internal.modules.ctm.Axis.Z;
+import static com.falsepattern.mcpatcher.internal.modules.common.Axis.X;
+import static com.falsepattern.mcpatcher.internal.modules.common.Axis.Y;
+import static com.falsepattern.mcpatcher.internal.modules.common.Axis.Z;
 
 
 /**

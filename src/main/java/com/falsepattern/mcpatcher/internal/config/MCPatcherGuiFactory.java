@@ -44,6 +44,7 @@ public final class MCPatcherGuiFactory implements SimpleGuiFactory {
         val result = new ArrayList<Class<?>>();
         result.add(ModuleConfig.class);
         result.add(MixinConfig.class);
+        result.add(ExtraConfig.class);
         return result.toArray(new Class<?>[0]);
     }
 

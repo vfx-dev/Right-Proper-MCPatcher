@@ -23,6 +23,7 @@
 package com.falsepattern.mcpatcher.internal.modules.ctm;
 
 import com.falsepattern.mcpatcher.internal.modules.common.CommonParser;
+import com.falsepattern.mcpatcher.internal.modules.common.Side;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import lombok.val;

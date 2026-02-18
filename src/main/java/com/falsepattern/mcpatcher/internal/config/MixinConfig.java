@@ -49,6 +49,13 @@ public final class MixinConfig {
     @Config.DefaultBoolean(true)
     public static boolean connectedTexturesMixins;
 
+    @Config.Comment({"Disable this if you don't want natural texture mixins to land.",
+                     "This is required for naturalTextures."})
+    @Config.LangKey
+    @Config.Name("naturalTexturesMixins")
+    @Config.DefaultBoolean(true)
+    public static boolean naturalTexturesMixins;
+
     @Config.Comment({"Disable this if you don't want better glass mixins to land.",
                      "This is required for betterGlass."})
     @Config.LangKey

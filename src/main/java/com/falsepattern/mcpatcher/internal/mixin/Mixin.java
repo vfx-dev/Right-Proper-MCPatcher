@@ -55,6 +55,11 @@ public enum Mixin implements IMixins {
                               () -> MixinConfig.connectedTexturesMixins && MixinConfig.resourcePackOverlayMixins,
                               client("ctm.TextureMapMixin_Overlay")),
 
+    NaturalTextures(Phase.EARLY,
+                      () -> MixinConfig.naturalTexturesMixins,
+                      client("natural.RenderBlocksMixin",
+                             "natural.TextureMapMixin")),
+
     RandomMobs(Phase.EARLY,
                () -> MixinConfig.randomMobsMixins,
                client("mob.EntityMixin",

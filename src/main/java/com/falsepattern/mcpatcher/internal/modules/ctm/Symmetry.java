@@ -22,6 +22,8 @@
 
 package com.falsepattern.mcpatcher.internal.modules.ctm;
 
+import com.falsepattern.mcpatcher.internal.modules.common.Side;
+
 public enum Symmetry {
     None,
     Opposite,

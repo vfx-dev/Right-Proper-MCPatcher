@@ -41,6 +41,13 @@ public final class ModuleConfig {
     @Config.DefaultBoolean(true)
     public static boolean connectedTextures;
 
+    @Config.Comment({"Runtime toggle for natural textures.",
+                     "Requires naturalTexturesMixins enabled."})
+    @Config.LangKey
+    @Config.Name("naturalTextures")
+    @Config.DefaultBoolean(true)
+    public static boolean naturalTextures;
+
     @Config.Comment({"Allow regular glass blocks, glass panes, and beacon glass to have semi-transparent textures.",
                      "Requires betterGlassMixins enabled."})
     @Config.LangKey
@@ -65,6 +72,10 @@ public final class ModuleConfig {
 
     public static boolean isConnectedTexturesEnabled() {
         return MixinConfig.connectedTexturesMixins && connectedTextures;
+    }
+
+    public static boolean isNaturalTexturesEnabled() {
+        return MixinConfig.naturalTexturesMixins && naturalTextures;
     }
 
     public static boolean isBetterGlassEnabled() {
