@@ -10,10 +10,12 @@ This mod provides various features for texture pack artists and modpack designer
   - Mobs can have different textures applied to them, based on biome, height, or even just purely randomized.
 - CTM connected textures
   - Connected glass and other block textures, with seamless tiling
+- Natural Textures
+  - Grass and other terrain blocks no longer have a "grid" pattern
 - Better Glass
-  - Resource packs can provide glass textures with semi-translucent effects
+    - Resource packs can provide glass textures with semi-translucent effects
 - Custom Item Textures
-  - Different item textures based on metadata, count, NBT, etc.
+    - Different item textures based on metadata, count, NBT, etc.
 
 Planned features:
 
